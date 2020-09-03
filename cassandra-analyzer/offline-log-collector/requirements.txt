@@ -1,0 +1,3 @@
+PyYAML
+# Elasticsearch 7.x NOTE probably not be needed for collecting; TODO test
+elasticsearch>=7.0.0,<8.0.0
