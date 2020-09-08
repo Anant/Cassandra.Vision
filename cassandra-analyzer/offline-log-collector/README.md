@@ -8,7 +8,7 @@ First, you will need to collect your logs and grab other diagnostic data from yo
 - Requires python3 and pip3
 
 ### Configuration
-- create a config/environments.yaml
+- Create a config/environments.yaml
     Should be same format as TableAnalyzer takes
     ```
     cp config-templates/environments-sample.yaml config/environments.yaml
@@ -18,7 +18,7 @@ First, you will need to collect your logs and grab other diagnostic data from yo
 
     See below for what options to set here.
 
-- create a config/settings.yaml
+- Create a config/settings.yaml
     ```
     cp config-templates/settings.sample.yaml config/settings.yaml
     vim config/environments.yaml

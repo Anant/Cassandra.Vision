@@ -5,7 +5,7 @@ TODO: Later will be integrated better with how TableAnalyzer goes and gets all t
 
 Please make sure you move the empty data/* directories if you move this script out. It uses a relative directory reference. 
 
-![NodeAnalyzer Folders](../doc/assets/NodeAnalyzer_folders.jpg)
+![NodeAnalyzer Folders](./assets/NodeAnalyzer_folders.jpg)
 
 
 Example:
