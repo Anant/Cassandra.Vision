@@ -64,4 +64,5 @@ do
 done
 
 if [ "${debug}" -eq 1 ] ; then echo $receive_compress ; fi
-`eval $(receive_compress)`
+# NOTE needs to not be inside of backticks to work
+eval $(receive_compress)

@@ -76,7 +76,7 @@ sudo filebeat -e -d "*" --c cassandra.vision/cassandra-analyzer/offline-log-inge
 ## Debugging
 ### Debugging the filebeat generator
   - Try editing the filebeat.yml manually and running again 
-      See [instructions here](#Want to add some logs and run script again with the same config?) for running again and for where the generated filebeat.yaml is.
+      See [instructions here](#want-to-add-some-logs-and-run-script-again-with-the-same-config) for running again and for where the generated filebeat.yaml is.
 
 ### Debugging ES
 #### Try sudo filebeat setup
