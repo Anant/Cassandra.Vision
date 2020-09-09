@@ -13,13 +13,13 @@ Example:
 Verbose output 
 
 ```
-./nodetool.receive.sh /var/log/cassandra /etc/cassandra DC1 1
+bash ./nodetool.receive.sh /var/log/cassandra /etc/cassandra DC1 1
 ```
 
 Silent output 
 
 ```
-./nodetool.receive.sh /var/log/cassandra /etc/cassandra DC1 0
+bash ./nodetool.receive.sh /var/log/cassandra /etc/cassandra DC1 0
 ```
 
 It uses `hostname -i` to get the IP address to name the tar.gz file

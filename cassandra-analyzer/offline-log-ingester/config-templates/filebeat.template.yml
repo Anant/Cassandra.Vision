@@ -1,5 +1,5 @@
 ###################### Filebeat Configuration Template  #########################
-# see cassandra.toolkit/log-analysis/FilebeatSetup.MD for more documentation, comments, and examples
+# see cassandra-analyzer/offline-log-ingester/FilebeatSetup.MD for more documentation, comments, and examples
 # This template differs on some points from example given in FilebeatSetup.MD however
 
 #=========================== Filebeat inputs =============================

@@ -67,20 +67,16 @@ By default the script is pointing towards a kibana instance running on localhost
 
 Replace the client_name and incident_id below and run it again
 ```
-sudo filebeat -e -d "*" --c cassandra.toolkit/log-analysis/automated-tarball-ingestion/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yaml
+sudo filebeat -e -d "*" --c cassandra.vision/cassandra-analyzer/offline-log-ingester/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yaml
 ```
 
-- filebeat.yaml will be at: cassandra.toolkit/log-analysis/automated-tarball-ingestion/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yml
+- filebeat.yaml will be at: cassandra.vision/cassandra-analyzer/offline-log-ingester/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yml
 - Alternatively, if filebeat is still running (and is using the filebeat.yaml created by this script), you can just add the separate log files and it will find and ingest them. 
 
 ## Debugging
 ### Debugging the filebeat generator
-  - If you want to make some manual changes to the filebeat.yml that was generated and try again, you can run:
-      ```
-      sudo filebeat -e -d "*" --c $PWD/logs-for-client/my_client/incident-159687225/tmp/filebeat.yaml
-      ```
-      (substituting in the real path for the filebeat.yaml that was generated)
-
+  - Try editing the filebeat.yml manually and running again 
+      See [instructions here](#Want to add some logs and run script again with the same config?) for running again and for where the generated filebeat.yaml is.
 
 ### Debugging ES
 #### Try sudo filebeat setup
@@ -91,7 +87,7 @@ Note that by default, `sudo filebeat setup` will use your default filebeat.yml f
 If you want to setup filebeat using a different filebeat.yml file, you can use the `--c` flag, e.g.,:
 
 ```
-sudo filebeat setup --c cassandra.toolkit/log-analysis/automated-tarball-ingestion/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yaml
+sudo filebeat setup --c cassandra.vision/cassandra-analyzer/offline-log-ingester/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yaml
 ```
 
 #### Error: ConnectionError(('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
@@ -107,12 +103,15 @@ You can find instructions for doing that above under [Specifying Kibana endpoint
 Run collect_logs test first. Then run ingest_tarball.py on that test tarball:
 
 ```
-cd
+# if you haven't ran log collection test already...
+cd cassandra-analyzer/offline-log-collector
 pip3 install -r requirements.txt
 pip3 install -r test/requirements.txt
-cdtest
+cd test
 python3 collect_logs_test.py
-cd..
+
+# now you have a test tarball to ingest in `offline-log-ingester/log-tarballs-to-ingest`
+cd ../../offline-log-ingester
 python3 ingest_tarball.py  test_client.tar.gz test_client 
 # Or, if you are safe to wipe out filebeat registry and filebeat indices before running the test:
 # python3 ingest_tarball.py  test_client.tar.gz test_client --clean-out-filebeat-first
@@ -131,3 +130,33 @@ Would do:
 
 Will need to update `ingest_tarball_test.py` for this to work though.
 
+
+## Development
+### Adding more logs to our tarball
+If you want to add more logs from the Cassandra node into the tarball for ingestion:
+
+1) Add another command to `NodeAnalyzer/nodetool.receive.v2.sh` 
+  - `collect_logs.py` calls `NodeAnalyzer/nodetool.receive.v2.sh` on each node to get logs and conf files and nodetool output. So to add more files to that list, edit `NodeAnalyzer/nodetool.receive.v2.sh`.
+  - Make sure to make a directory for it too e.g., something like:
+      ```
+      mkdir -p $data_dest_path/<your new path>
+      ```
+
+2) If `nodetool.receive.v2.sh` doesn't place the files into a directory that already gets copied, you will have to edit `helper_classes/node.py`
+  - `collect_logs.py` will call `helper_classes/node.py` when it is creating the tarball.
+  - See `helper_classes/node.py#copy_files_to_final_destination`, which copies all the files for a given node and creates directories in the destination directory if necessary.
+  - The files you want copied need to be copied in the `node.py#copy_files_to_final_destination` method, or they will not end up in the tarball at the end.
+
+3) Edit `ingest_tarball.py` to ingest these new files that you want added into Kibana
+  - If these are log files that you are adding, Kibana won't see them unless you configure our ingestion tool to do so.
+  - `ingest_tarball.py` actually looks at `helper_classes/filebeat_yml.py#log_type_definitions` for what will end up in your filebeat.yml, as well as for what to ingest into kibana. Add a new item in that list in order to ingest your new logs.
+      * key (e.g., "spark.master") can be anything as long as it's unique, it is more of a label for us really.
+      * `path_to_logs_source` is where the log collection needs to put these logs (corresponds to what you set in `node.py#copy_files_to_final_destination`). These do not need to be unique: e.g., `cassandra.dse-collectd` and `cassandra.garbage_collection` have the same `path_to_logs_source`, and it's no problem. It just means our script will try to copy all these logs twice, which doesn't hurt anything, but it will have two separate entries in our generated filebeat.yml with different paths and different tags, which is what we need.
+      * `path_to_logs_dest` is where the log collection will end up after unarchiving and positioning the logs. These do not need to be unique either.
+      * `tags` is for separating these logs from other logs, so they are searchable in Kibana. 
+      * `log_regex` is the regex that filebeat.yml will use to find htese logs after they are placed by the ingest_tarball.py script. Will include the `path_to_logs_dest` but the regex should include all files you are copying in and exclude files you don't want filebeat to ingest. Files that match will be assigned the `tags` in Kibana. Should be unique as well.
+      * if any of the defaults (see 'filebeat_input_template') need to be overwritten, add a key "custom_overwrites" (see `linux.system` logs for example, which uses this).
+
+4) If these are logs that have a pattern different from the other logs that we are ingesting into kibana, you will have to add the pattern into our `config-templates/filebeat.template.yml` file, under the field `processors`.
+  - This file contains all dissect patterns.
+  - You will probably want to add at least two patterns: 1. for the log pattern itself; 2. One for field: "log.file.path" so that these new logs' filepath gets into kibana correctly also

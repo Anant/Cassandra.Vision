@@ -13,21 +13,24 @@ import sys
 from helper_classes.node import Node
 import stat
 
+# TODO rename to `offline_log_collector_path`
 project_root_path = os.path.dirname(os.path.realpath(__file__))
 repo_path = f"{project_root_path}/../.."
-node_analyzer_path = f"{repo_path}/NodeAnalyzer"
-table_analyzer_path = f"{repo_path}/TableAnalyzer"
+node_analyzer_path = f"{project_root_path}/NodeAnalyzer"
+table_analyzer_path = f"{project_root_path}/TableAnalyzer"
 default_settings_yml_path = os.path.join(project_root_path, "config/settings.yaml")
 default_environments_yml_path = os.path.join(project_root_path, "config/environments.yaml")
 
 # access TableAnalyzer class and related helpers
 sys.path.insert(0, table_analyzer_path)
+
 # not using for now, just running as a command line script for easy args sending
 # from cfstats.receive import main as run_table_analyzer_main
 # gets ssh key or cassandra/spark hosts from our environments.yml file
+# `config` is a module in TableAnalyzer package
 from config import get_keys
 
-tarballs_to_ingest_dir_path = f"{project_root_path}/log-tarballs-to-ingest"
+tarballs_to_ingest_dir_path = f"{project_root_path}/../offline-log-ingester/log-tarballs-to-ingest"
 
 config_path_defaults = {
     "dse": "/etc/dse/cassandra/",
