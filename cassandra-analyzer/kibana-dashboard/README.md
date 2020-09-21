@@ -36,6 +36,18 @@ We also have some predefined queries that you can use in order to find out more 
 - Go to the "Discover" view and click on the dropdown that looks like a floppy disk. You can see some sample queries to get you started.
 - Alternatively, if you look at the source filters/queries for the timelion charts or the data tables in the dashboard, that might also give you some ideas of queries to use in Discover.
 
+### Other Queries to Consider
+Our filebeat.yml adds the following fields: 
+- `ingest.loglevel`: log level for the log, e.g., `ERROR`, `WARN`, `INFO`, `DEBUG`
+- `ingest.component`: Component for the log
+- `ingest.class`: Java Class that is related to this log e.g., `CassandraDaemon` 
+- `ingest.host-name`: ip of the node that generated this log, e.g., `1.2.3.4`. Extracted from the filepath of the log archive
+- `ingest.message`: takes what's left of the log message and outputs it here.
+- `tags`: tags we set based on what type of log it is. 
+    * One tag in particular that we want to highlight is that whatever `client_name` you passed in when running `ingest_tarball.py` is set on the tags as well, so you can query for that if you want.
+    * We also set `cassandra`, `spark`, or `linux-system` depending on where this log originated from, as determined by the file path in the log archive that we ingested.
+
+Of course, you can also just query the raw log message that these other fields were extracted from (namely, `message`).
 
 ## Development
 
