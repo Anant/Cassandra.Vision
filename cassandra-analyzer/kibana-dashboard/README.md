@@ -13,8 +13,10 @@ This will make our log analysis process even faster, helping us deliver analyses
 - Change the time filters to match these particular logs
 
 ### Interpreting the pre-defined visualizations
-#### The Charts We Provide
+#### Charts we provide
 Currently we have some timelion charts with corresponding data tables next to them. 
+
+![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-dashboard.png)
 
 Note that the data tables sometimes have extra filters that the timelion to its left does not have. E.g., sometimes a table has an extra filter that only shows loglevel ERROR logs, whereas the timelion to its left doesn't. 
 
@@ -22,19 +24,24 @@ Be careful to read the labels and look at the source queries if you are not sure
 
 #### Default Filters
 By default we are filtering out logs that are not tagged as "Cassandra". For what logs have that tag, see our generated filebeat.yml file. You can easily change this in the dashboard by clicking the X next to the filter (in the top left corner).
+![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-default-filter.png)
 
 ### Interacting with the Dashboard
 
-Sometimes the dashboard might give more information than you need. You can of course edit each visualization yourself by clicking on "Edit" and then going to a specific visualization and modifying it to your likeing.
+Sometimes the dashboard might give more information than you need. You can of course edit each visualization yourself by clicking on "Edit" and then going to a specific visualization and modifying it to your liking.
+![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-edit-button.png)
+![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-edit-visualization.png)
 
 However, you can also hide certain logs by clicking on their labels to quickly remove extra noise.
+![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-hide-by-clicking-label.png)
 
 
-### Use Our Pre-Defined Queries
+### Use our Pre-defined Queries
 
 We also have some predefined queries that you can use in order to find out more details about the actual logs. 
 - Go to the "Discover" view and click on the dropdown that looks like a floppy disk. You can see some sample queries to get you started.
 - Alternatively, if you look at the source filters/queries for the timelion charts or the data tables in the dashboard, that might also give you some ideas of queries to use in Discover.
+![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-saved-queries.png)
 
 ### Other Queries to Consider
 Our filebeat.yml adds the following fields: 
