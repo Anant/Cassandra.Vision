@@ -4,6 +4,8 @@ Sometimes it is preferable to do "online log analysis", which is where you colle
 
 After you collect your logs and grab other diagnostic data, you need to ingest it into your Dashboard. This is what this tool is for. Specifically, we ingest into Elasticsearch and Kibana using Filebeat.
 
+Note that we have a starter Kibana Dashboard that you can import into kibana as well (see separate directory "kibana-dashboard"). [Find it here on Github](https://github.com/Anant/cassandra.vision/tree/master/cassandra-analyzer/kibana-dashboard).
+
 ## Setup
 - Requires python3 and pip3
 - `pip3 install -r requirements.txt`

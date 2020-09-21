@@ -12,6 +12,16 @@ This will make our log analysis process even faster, helping us deliver analyses
 - Change the time filters to match these particular logs
 
 ## Development
+
 ### Add a new visualization
 - Don't save the time filters. This way, the time filter will only be set by the dashboard, not the visualization.
 - Probably do save the filters, assuming that the filter is an important part of the visualization.
+
+### Export saved dashboards, queries, and visualizations
+#### Using Kibana GUI
+https://www.elastic.co/guide/en/kibana/7.8/managing-saved-objects.html#managing-saved-objects-export-objects
+Our Dashboard is Called "Cassandra Logs Dashboard", and we have some queries namespaced with the word "Cassandra" as well so search for "Cassandra" in the saved objects search bar to find our dashboard and queries. Make sure to save all related objects.
+
+#### Using API
+(Have not tried yet)
+https://www.elastic.co/guide/en/kibana/7.8/saved-objects-api-export.html#ssaved-objects-api-create-example
