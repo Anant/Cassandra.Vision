@@ -13,12 +13,15 @@ This will make our log analysis process even faster, helping us deliver analyses
 - Change the time filters to match these particular logs
 
 ### Interpreting the pre-defined visualizations
-
+#### The Charts We Provide
 Currently we have some timelion charts with corresponding data tables next to them. 
 
 Note that the data tables sometimes have extra filters that the timelion to its left does not have. E.g., sometimes a table has an extra filter that only shows loglevel ERROR logs, whereas the timelion to its left doesn't. 
 
 Be careful to read the labels and look at the source queries if you are not sure.
+
+#### Default Filters
+By default we are filtering out logs that are not tagged as "Cassandra". For what logs have that tag, see our generated filebeat.yml file. You can easily change this in the dashboard by clicking the X next to the filter (in the top left corner).
 
 ### Interacting with the Dashboard
 
