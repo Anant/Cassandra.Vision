@@ -5,6 +5,7 @@ import subprocess
 
 class FilebeatYML:
     template_yaml_as_dict = None
+    client_name = None
     hostnames = []
 
     """
@@ -233,7 +234,8 @@ class FilebeatYML:
     }
 
 
-    def __init__(self, project_root_path, base_filepath_for_logs, path_for_client, **kwargs):
+    def __init__(self, client_name, project_root_path, base_filepath_for_logs, path_for_client, **kwargs):
+        self.client_name = client_name
         self.template_path = os.path.join(project_root_path, "config-templates/filebeat.template.yml")
 
         # does things such as setting filebeat.yml so we don't output to ES, but to console instead
@@ -355,7 +357,7 @@ class FilebeatYML:
 
             fb_input = filebeat_inputs[-1]
             # add tags for this log type
-            fb_input["tags"] = log_type_def["tags"]
+            fb_input["tags"] = log_type_def["tags"] + [self.client_name]
 
             # overwrite all values from the template if an overwrite is specified
             for custom_overwrite_key, custom_overwrite_val in log_type_def.get("custom_overwrites", {}).items():

@@ -48,6 +48,7 @@ processors:
           tags: "linux-system"
       tokenizer: "%{timestamp} %{+timestamp} %{+timestamp} %{system-host-name} %{component}: [%{duration}] %{message}"
       field: "message"
+      # TODO should this be "tags" (plural)? or "add_tag"?
       tag: "kern.log-dissect"
       target_prefix: "ingest"
 
@@ -80,8 +81,11 @@ processors:
   - dissect:
       tokenizer: "%{loglevel} [%{component}] %{timestamp} %{+timestamp},%{} %{class}.%{}:%{} - %{message}"
       field: "message"
+      # TODO should this be "tags" (plural)? or "add_tag"?
       tag: "cassandra-dissect"
       target_prefix: "ingest"
+      # added, though doesn't seem to make a difference when looking at counts
+      trim_values: all
   - dissect:
       # <path_for_client> will be replaced by the python script
       tokenizer: "<path_for_client>/incident-%{incident-id}/%{host-name}/cassandra/"
@@ -93,6 +97,7 @@ processors:
   - dissect:
       tokenizer: "%{loglevel} %{timestamp} %{+timestamp},%{} %{class}.%{}:%{} - %{message}"
       field: "message"
+      # TODO should this be "tags" (plural)? or "add_tag"?
       tag: "spark-dissect"
       target_prefix: "ingest"
       # TODO consider adding to other dissect statements as well. Though doesn't seem to be working

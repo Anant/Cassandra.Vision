@@ -70,7 +70,12 @@ class IngestTarball:
         # will set this once we know the directory name of the extracted archive
         self.nodes_dir = None
 
-        self.filebeat_yml = FilebeatYML(project_root_path=project_root_path, base_filepath_for_logs=self.base_filepath_for_logs, path_for_client=self.path_for_client, **kwargs)
+        self.filebeat_yml = FilebeatYML(
+            client_name=client_name,
+            project_root_path=project_root_path,
+            base_filepath_for_logs=self.base_filepath_for_logs,
+            path_for_client=self.path_for_client,
+            **kwargs)
 
         ##################
         # other options
