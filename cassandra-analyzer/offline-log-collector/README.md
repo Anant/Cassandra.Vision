@@ -6,6 +6,7 @@ First, you will need to collect your logs and grab other diagnostic data from yo
 
 ## Setup
 - Requires python3 and pip3
+-  Currently also requires `nodetool` to be callable from the commandline on the node(s) that logs are collected from.
 
 ### Configuration
 - Create a config/environments.yaml
