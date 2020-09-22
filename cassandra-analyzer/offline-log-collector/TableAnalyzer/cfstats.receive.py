@@ -41,6 +41,7 @@ def main():
             sys.exit();
         else:
             print("error: " + result)
+            # TODO exit here as well?
     if args.debug: print(args.db + " Version : " + output)
 
     if int((output.split(": ")[1])[0]) == 2:
