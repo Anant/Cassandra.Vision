@@ -39,6 +39,8 @@ def main():
         if result.find("Connection refused") >= 0:
             print("Cannot Connect To " + args.db.title() + ", Terminating code")
             sys.exit();
+        else:
+            print("error: " + result)
     if args.debug: print(args.db + " Version : " + output)
 
     if int((output.split(": ")[1])[0]) == 2:
