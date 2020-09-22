@@ -15,7 +15,15 @@ Find the file for the export that you want.
 
 Latest version is currently `./cassandra-analyzer/kibana-dashboard/exported-objects/export-v1.1.ndjson`
 
-Then you can import the file into Kibana following the instructions below. See [official documentation](https://www.elastic.co/guide/en/kibana/7.8/managing-saved-objects.html#managing-saved-objects-export-objects) for more.
+The easiest way is to use the [Import Saved objects API](https://www.elastic.co/guide/en/kibana/current/saved-objects-api-import.html). We made a sample script if you are running kibana on localhost:
+
+```
+./scripts/import-dashboard.sh
+```
+Or you can adjust it to use your kibana host.
+
+
+The other way is to use the Kibana GUI to import, which we outline below. See [official documentation](https://www.elastic.co/guide/en/kibana/7.8/managing-saved-objects.html#managing-saved-objects-export-objects) for more details.
 
 #### Open the Stack Management Settings view 
 Click on the hamburger button and then "Stack Management" (or just go to http://<your-kibana-host>:5601/app/management)
