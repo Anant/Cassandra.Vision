@@ -352,7 +352,7 @@ Potential Causes
 7. Ameer Ajmal Baig - Refactoring, Testing, Documentation User Feedback
 8. Pramod Pottimuthu - Testing, User Feedback
 9. Clyde Clark - Testing, Documentation, User Feedback
-10. Ryan Quey - Documentation, 
+10. Ryan Quey - Documentation
 
 The very original original original code came from "https://github.com/thejaspm/cfstatsParseVisualize" which has been worked over several times. In the spirit of open source, credit goes to https://github.com/thejaspm for starting it off.
 
