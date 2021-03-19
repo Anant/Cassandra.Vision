@@ -99,7 +99,7 @@ Below is a description of how we use the values set for region, cluster, and dat
 # region:
 #  cluster:
 #    datacenter:
-us:
+uswest:
   prod:
     cassandra:
       - 192.168.0.1
