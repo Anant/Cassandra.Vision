@@ -195,7 +195,7 @@ python3 cfstats.receive.py uswest prod cassandra 1
 ```
 
 #### Expected result
-At this point, there should now be .txt files, one for each node, in the ./data/<region>/<cluster>/ directory (e.g., ./data/uswest/prod).
+At this point, there should now be .txt files, one for each node, in the `./data/<region>/<cluster>/` directory (e.g., ./data/uswest/prod`).
 
 ## Generate Spreadsheet
 
