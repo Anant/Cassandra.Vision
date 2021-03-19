@@ -81,20 +81,18 @@ Below is a description of how we use the values set for region, cluster, and dat
 "Region"
 * Should probably be one of: us-east-1|usw|us|uswest (or something like that)
 * The same kind of idea as "environment", we use only for our script to namespace these nodes
-
-In our examples below, we use uswest for our region.
+* In our examples below, we use `uswest` for our region.
 
 "Environment"
-* Should probably be one of: dev/stage/prod
-* is just a way to namespace these nodes for use by script.
-* * Does not have an impact on where the script looks to collect the files from, but hasn't impact on the path we collect the files to. (will go to: data/<region>/<environment>/<ip>.txt
-
-In our examples below, we use prod for our environment.
+* Value should probably be one of: dev/stage/prod
+* This is just a way to namespace these nodes for use by script.
+* This var does not have an impact on where the script looks to collect the files from, but does have an impact on the path we collect the files to. (will go to: `data/<region>/<environment>/<ip>.txt`
+* In our examples below, we use `prod` for our environment.
 
 "Datacenter"
-Often we use one of “cassandra” or “spark” in our examples, but really this can be any arbitrary string, just needs to be whatever we defined in the environments.yaml file, and line up with the directory we created in the data file. For example, can also be “dc1” etc.
-
-In our examples below, we use cassandra for our datacenter.
+* Often we use one of “cassandra” or “spark” in our examples, but really this can be any arbitrary string, just needs to be whatever we defined in the environments.yaml file, and line up with the directory we created in the data file. 
+* For example, can also be “dc1” etc.
+* In our examples below, we use `cassandra` for our datacenter.
 
 #### Example Configuration
 ```
