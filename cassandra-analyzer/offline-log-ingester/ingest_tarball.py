@@ -389,7 +389,11 @@ if __name__ == '__main__':
     parser.set_defaults(debug_mode=False)
 
     # only allowing one by default
-    parser.add_argument('--es-hosts', dest='es_hosts', action='store_true')
+    parser.add_argument('--es-hosts', 
+                        dest='es_hosts', 
+                        type=str,
+                        help='hostname and port for es python client and our filebeat yaml to use'
+                        )
     parser.set_defaults(es_hosts="127.0.0.1:9200")
     parser.add_argument('--custom-config', 
                         dest='custom_config',

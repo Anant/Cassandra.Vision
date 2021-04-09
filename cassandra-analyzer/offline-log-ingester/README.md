@@ -179,6 +179,26 @@ You can find instructions for doing that above under [Specifying Kibana endpoint
 
 ES host can be set using --es-hosts flag as well.
 
+#### Error: 
+```
+Elasticsearch.exceptions.ConnectionError: ConnectionError(<urllib3.connection.HTTPConnection object at 0x7fab672f0780>: Failed to establish a new connection: [Errno 111] Connection refused) caused by: NewConnectionError(<urllib3.connection.HTTPConnection object at 0x7fab672f0780>: Failed to establish a new connection: [Errno 111] Connection refused)
+```
+
+Diagnosing this one:
+- There's probably also something like this in the stacktrace:
+```
+...
+File "ingest_tarball.py", line 275, in clear_filebeat_indices_and_registry
+self.es.indices.delete(index='filebeat-*')
+...
+```
+
+- Also you are probably using `--clean-out-filebeat-first` flag, since this is the only thing we're using the python client for right now.
+
+Solution: 
+ES Python client isn't connecting to elasticsearch. You probably need to set the --es-hosts flag to something else.
+
+
 ## Testing
 ### Current way to test: 
 Run collect_logs test first. Then run ingest_tarball.py on that test tarball:
