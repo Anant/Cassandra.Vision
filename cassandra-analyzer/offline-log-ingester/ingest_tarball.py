@@ -389,8 +389,8 @@ if __name__ == '__main__':
     parser.set_defaults(debug_mode=False)
 
     # only allowing one by default
-    parser.add_argument('--es-host', dest='es_host', action='store_true')
-    parser.set_defaults(es_host="127.0.0.1:9200")
+    parser.add_argument('--es-hosts', dest='es_hosts', action='store_true')
+    parser.set_defaults(es_hosts="127.0.0.1:9200")
     parser.add_argument('--custom-config', 
                         dest='custom_config',
                         action='append',
@@ -412,7 +412,7 @@ if __name__ == '__main__':
         "debug_mode": args.debug_mode,
         "custom_config": args.custom_config,
         "ignore_zeros_on_extract": args.ignore_zeros_on_extract,
-        "es_host": args.es_host,
+        "es_hosts": args.es_hosts,
     }
 
     ingestTarball = IngestTarball(args.tarball_filename, args.client_name, **options)
