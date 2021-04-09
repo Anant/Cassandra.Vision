@@ -245,8 +245,9 @@ class FilebeatYML:
         a list of configs to set on the filebeat.yml, key being key of config (potentially multiple layers deep) and value is what to set it to
         - called last, so overrides any other setting
         - use integer to set a list value
-        - E.g., `[["output.elasticsearch.hostname", "127.0.0.1"], ["kibana.hostname", "123.456.789.101"], ["output.kibana.enabled", "false", ["processors.2.timestamp.ignore_failure", "false"]]`.
+        - E.g., `[["output.elasticsearch.hosts", "'127.0.0.1:9200'"], ["kibana.hostname", "123.456.789.101"], ["output.kibana.enabled", "false", ["processors.2.timestamp.ignore_failure", "false"]]`.
         """
+        self.es_hosts = kwargs.get("es_hosts", [])
         self.custom_config = kwargs.get("custom_config", [])
 
         self.base_filepath_for_logs = base_filepath_for_logs
@@ -398,10 +399,16 @@ class FilebeatYML:
             del self.template_yaml_as_dict["output"]["logstash"]
             self.template_yaml_as_dict["output"]["console"]["pretty"] = True
 
+    def set_es_hosts(self):
+        """
+        set es hosts in yaml file
+        """
+
     def apply_custom_config(self):
         """
         apply any custom_configs passed in through args
         """
+        self.template_yaml_as_dict["output"]["elasticsearch"]["hosts"] = self.es_hosts
 
         for config in self.custom_config:
             key_trail_str = config[0]
@@ -497,6 +504,7 @@ class FilebeatYML:
         self.load_template()
         self.add_filebeat_inputs()
         self.set_processors()
+        self.set_es_hosts()
         self.handle_optional_settings()
         self.apply_custom_config()
         self.remove_old_filebeat_yml()

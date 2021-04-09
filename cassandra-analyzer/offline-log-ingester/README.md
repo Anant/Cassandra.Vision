@@ -24,8 +24,18 @@ Note that we have a starter Kibana Dashboard that you can import into kibana as 
     ```
     python3 ingest_tarball.py my-client-logs-tarball.tar.gz my_client --clean-out-filebeat-first
     ```
+### Specifying Elasticsearch host
+By default the script is pointing towards a elasticsearch instance running on localhost. To specify a different host, use the `--es-host` arg:
+    ```
+    --es-hosts 123.456.345.123:9200
+    ```
+
+- this will be used to set `output.elasticsearch.hosts` in the filebeat yaml
+- unlike using --custom-config, this will set the es host for the es python client the script uses. Right now the client only gets used if you also use the `--clean-out-filebeat-first` flag, but that might change in the future. 
+- if you also set a `--custom-config` flag for `output.elasticsearch.hosts`, that will override what you set for es-host in the yaml, but will not be used for the es python client.
+
 ### Specifying Kibana endpoint
-By default the script is pointing towards a kibana instance running on localhost. To specify a different kibana host, use the `--custom-config arg`:
+By default the script is pointing towards a kibana instance running on localhost. To specify a different kibana host, use the `--custom-config` arg:
     To pass in arbitrary config for the filebeat.yml file, send in a key (can be nested) and a value, e.g., 
     ```
     --custom-config setup.kibana.host 123.456.345.123:5601
@@ -76,10 +86,76 @@ sudo filebeat -e -d "*" --c cassandra.vision/cassandra-analyzer/offline-log-inge
 - filebeat.yaml will be at: cassandra.vision/cassandra-analyzer/offline-log-ingester/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yml
 - Alternatively, if filebeat is still running (and is using the filebeat.yaml created by this script), you can just add the separate log files and it will find and ingest them. 
 
+## Expected Tarball Format
+A number of errors can occur if the tarball or zip file with the logs is not formatted exactly like tarballs received from opscenter or our [`offline-log-collector`](https://github.com/Anant/cassandra.vision/tree/master/cassandra-analyzer/offline-log-collector) tool.
+
+### What we're expecting:
+```
+<tarball-filename>.tar.gz OR <tarball-filename>.zip
+    <archived-dir>/ 
+        nodes/
+            <ip-1>/
+                logs/
+                    cassandra/
+                        audit/audit.log (optional)
+                        system.log
+                        gremlin.log (optional)
+                        debug.log (optional)
+                        output.log (optional)
+                        gc.log (optional)
+                    spark/
+                        master/
+                            master.log
+                        worker/
+                            worker.log
+            <ip-2>/
+                … (same as ip-1)
+            … (other ips)
+```
+
+Notes:
+- Additional files won't hurt anything. 
+- `<archived-dir>` (see above) is often the same name as `<tarball-filename>` but doesn't need to be.
+- the absence of optional files mentioned above won't stop the script from running to the end and ingesting whatever files are there, but the presence of those files means those files will be ingested too. See `./helper_classes/filebeat_yml.py` for what files the filebeat ingester is looking for. 
+- all log files can either end in `.log` as above, or `.log*`. Often this looks something like `gc.log.0` or `gc.log.3.current`. All that end in `.log*` will be ingested. 
+
+### Example error messages 
+#### FileNotFoundError: ...nodes/nodes
+```
+FileNotFoundError: [Errno 2] No such file or directory: '.../cassandra.vision/cassandra-analyzer/offline-log-ingester/logs-for-client/<client-name>/incident-<incident-id>/tmp/nodes/nodes'
+```
+This means that the ingested tarball looked something like this: 
+```
+<tarball-filename>.tar.gz OR <tarball-filename>.zip
+        nodes/
+            <ip-1>/
+            ...
+```
+The tarball is missing the `<archived-dir>/`, so our script thinks that `nodes` is the name of the `<archived-dir>/`. Consequently, it's looking for `nodes/nodes/` but can't find it. 
+
+To solve, put the `nodes` dir inside a parent directory, rezip your tarball and try again.
+
+
+
+### Solutions
+- reformat your tarball and zip it back up, and run script again
+- Do dangerous stuff if you are feeling confident that you know what you're doing, like going into the `./logs-for-client/` dir where the unzipped logs get put into, and rearrange things there, and temporarily commenting out steps in the `run` method of the `ingest_tarball.py` script, particularly `self.extract_tarball()`, then running `ingest_tarball.py` again. Obviously less than ideal.
+
 ## Debugging
 ### Debugging the filebeat generator
   - Try editing the filebeat.yml manually and running again 
       See [instructions here](#want-to-add-some-logs-and-run-script-again-with-the-same-config) for running again and for where the generated filebeat.yaml is.
+
+#### ERROR: failed to open store 'filebeat': open /var/lib/filebeat/registry/filebeat/meta.json: no such file or directory
+This seems to be because newer versions of ES/filebeat (e.g., 7.9.x) have different behavior, and to clear out the registry you actually need to remove the whole `/var/lib/filebeat/registry`, not just the subdirectory `/var/lib/filebeat/registry/filebeat`, which worked before. 
+
+If you don't delete the `/var/lib/filebeat/registry` directory, filebeat doesn't seem to know that it needs to regenerate that directory for you, and throws that error.
+
+Solution: `rm -rf /var/lib/filebeat/registry`
+
+For reference, see [here](https://discuss.elastic.co/t/cant-start-filebeat/181050/7).
+
+
 
 ### Debugging ES
 #### Try sudo filebeat setup
@@ -100,6 +176,8 @@ elasticsearch.exceptions.ConnectionError: ConnectionError(('Connection aborted.'
 ```
 
 You can find instructions for doing that above under [Specifying Kibana endpoint](#Specifying Kibana endpoint).
+
+ES host can be set using --es-hosts flag as well.
 
 ## Testing
 ### Current way to test: 

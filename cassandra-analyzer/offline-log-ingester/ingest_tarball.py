@@ -12,7 +12,6 @@ import fnmatch
 from helper_classes.filebeat_yml import FilebeatYML
 
 from elasticsearch import Elasticsearch
-es = Elasticsearch()
 
 project_root_path = os.path.dirname(os.path.realpath(__file__))
 tarballs_to_ingest_dir_path = f"{project_root_path}/log-tarballs-to-ingest"
@@ -70,6 +69,9 @@ class IngestTarball:
         # will set this once we know the directory name of the extracted archive
         self.nodes_dir = None
 
+        # set es hosts in es python client
+        self.es = Elasticsearch(kwargs["es_hosts"])
+
         self.filebeat_yml = FilebeatYML(
             client_name=client_name,
             project_root_path=project_root_path,
@@ -77,6 +79,7 @@ class IngestTarball:
             path_for_client=self.path_for_client,
             **kwargs)
 
+        # if they set a different url for elasticsearch, make sure our es client knows about it too
         ##################
         # other options
         ##################
@@ -265,16 +268,16 @@ class IngestTarball:
 
     def clear_filebeat_indices_and_registry(self):
         # ignore 404 and 400
-        # es.indices.delete(index='filebeat-*', ignore=[400, 404])
+        # self.es.indices.delete(index='filebeat-*', ignore=[400, 404])
 
         if self.clean_out_filebeat_first:
             print("clearing filebeat indices")
-            es.indices.delete(index='filebeat-*')
+            self.es.indices.delete(index='filebeat-*')
 
             # this makes sure filebeat will re-ingest all files when it runs again
             print("clearing filebeat registry")
             # check=True means throw errors if they happen
-            subprocess.run("sudo rm -rf /var/lib/filebeat/registry/filebeat", shell=True, check=True)
+            subprocess.run("sudo rm -rf /var/lib/filebeat/registry/", shell=True, check=True)
 
         else:
             print("Option to clear filebeat indices and registry not set, continuing on.")
@@ -384,12 +387,16 @@ if __name__ == '__main__':
     parser.set_defaults(clean_out_filebeat_first=False)
     parser.add_argument('--debug-mode', dest='debug_mode', action='store_true')
     parser.set_defaults(debug_mode=False)
+
+    # only allowing one by default
+    parser.add_argument('--es-host', dest='es_host', action='store_true')
+    parser.set_defaults(es_host="127.0.0.1:9200")
     parser.add_argument('--custom-config', 
                         dest='custom_config',
                         action='append',
                         nargs=2,
                         metavar=('config_key', 'config_value'),
-                        help='Add whatever custom config you want for generating the filebeat.yml. Can be used multiple times. E.g., `--custom-config output.elasticsearch.hostname 127.0.0.1 --custom-config kibana.hostname 123.456.789.101 --custom-config output.kibana.enabled false --custom-config processors.2.timestamp.ignore_failure false`. Use integers (as in the example above) for array indices. This will override any other setting, since it sets fields after everything else.'
+                        help='Add whatever custom config you want for generating the filebeat.yml. Can be used multiple times. E.g., `--custom-config output.elasticsearch.hosts \'127.0.0.1:9200\' --custom-config output.kibana.enabled false --custom-config processors.2.timestamp.ignore_failure false`. Use integers (as in the example above) for array indices. This will override any other setting, since it sets fields after everything else.'
                         )
     parser.set_defaults(custom_config=[])
     parser.add_argument('--cleanup-on-finish', dest='clean_up_on_finish', action='store_true', help="If runs successfully, clears out everything created except for the original tarball")
@@ -405,6 +412,7 @@ if __name__ == '__main__':
         "debug_mode": args.debug_mode,
         "custom_config": args.custom_config,
         "ignore_zeros_on_extract": args.ignore_zeros_on_extract,
+        "es_host": args.es_host,
     }
 
     ingestTarball = IngestTarball(args.tarball_filename, args.client_name, **options)
