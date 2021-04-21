@@ -10,6 +10,7 @@ First, you will need to collect your logs and grab other diagnostic data from yo
 
 ### Configuration
 - Create a config/environments.yaml
+
     Should be same format as TableAnalyzer takes
     ```
     cp config-templates/environments-sample.yaml config/environments.yaml
