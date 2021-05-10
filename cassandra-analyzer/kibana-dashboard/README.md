@@ -1,10 +1,10 @@
 # Kibana Dashboard
-An importable kibana dashboard to use that's compatible with our filebeat setup. Built in Kibana 7.8.
+An importable kibana dashboard to use that's compatible with our filebeat setup. Built in Kibana 7.8 but should be compatible with other versions too, especially 7.x versions.
 
 ## Description 
 This Kibana dashboard provides several standard KQL/Lucene queries ready to go, some timelion charts, log counts etc, so that all the user has to do is import the kibana dashboard config from our repo. 
 
-This will make our log analysis process even faster, helping us deliver analyses to clients in a more timely manner while keeping costs low. This also helps make our analysis more consistent, removing likelihood of using improper or misleading queries as well as potentially helping us write reports that have more consistent charts to our clients.
+This will make our log analysis process even faster, helping us deliver analyses in a more timely manner while keeping costs low. This also helps make our analysis more consistent, removing likelihood of using improper or misleading queries.
 
 # Instructions
 ## Setup
@@ -13,49 +13,49 @@ If you haven't already, install kibana, filebeat etc, and ingest logs into Kiban
 ### Import the Dashboard
 Find the file for the export that you want. 
 
-Latest version is currently `./cassandra-analyzer/kibana-dashboard/exported-objects/export-v1.1.ndjson`
+Latest version is currently [`./exported-objects/export-v1.1.ndjson`](`./exported-objects/export-v1.1.ndjson`)
 
-The easiest way is to use the [Import Saved objects API](https://www.elastic.co/guide/en/kibana/current/saved-objects-api-import.html). We made a sample script if you are running kibana on localhost:
+The easiest way is to use the [Import Saved objects API](https://www.elastic.co/guide/en/kibana/current/saved-objects-api-import.html). We made a sample script if you are running kibana on `localhost`:
 
 ```
+# assuming current dir is this dir, cassandra-analyzer/kibana-dashboard
 ./scripts/import-dashboard.sh
 ```
-Or you can adjust it to use your kibana host.
-
+You can easily adjust the bash script to use your kibana host if kibana is not running on `localhost`.
 
 The other way is to use the Kibana GUI to import, which we outline below. See [official documentation](https://www.elastic.co/guide/en/kibana/7.8/managing-saved-objects.html#managing-saved-objects-export-objects) for more details.
 
 #### Open the Stack Management Settings view 
 Click on the hamburger button and then "Stack Management" (or just go to http://<your-kibana-host>:5601/app/management)
 
-![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-click-stack-management.png)
+![screenshot](../../screenshots/kibana-click-stack-management.png)
 
 #### Open Saved objects view 
 Click `Kibana` > `Saved Objects` on the left menu. (or just go to http://<your-kibana-host>:5601/app/management/kibana/objects).
 
-![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-click-saved-objects.png)
+![screenshot](../../screenshots/kibana-click-saved-objects.png)
 
 #### Upload the file
 Click "Import" then upload the ndjson file. 
 
-![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-import-json.png)
+![screenshot](../../screenshots/kibana-import-json.png)
 
 #### Open the Dashboard
 In the sidebar, click on `Kibana` > `Dashboard` to open the dashboard view and select the `Cassandra Logs Dashboard`.
 
-![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-select-your-dashboard.png)
+![screenshot](../../screenshots/kibana-select-your-dashboard.png)
 
 #### Change the Time Filter
 Kibana will default to only showing the last 15 minutes. The makes more sense if you are monitoring a live cluster, but if you are doing offline log ingestion, make sure to change this to something more reasonable
 
-![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-change-time-filter.png)
+![screenshot](../../screenshots/kibana-change-time-filter.png)
 
 
 ## Interpreting the pre-defined visualizations
 ### Charts we provide
 Currently we have some timelion charts with corresponding data tables next to them. 
 
-![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-dashboard.png)
+![screenshot](../../screenshots/kibana-dashboard.png)
 
 Note that the data tables sometimes have extra filters that the timelion to its left does not have. E.g., sometimes a table has an extra filter that only shows loglevel ERROR logs, whereas the timelion to its left doesn't. 
 
@@ -63,16 +63,16 @@ Be careful to read the labels and look at the source queries if you are not sure
 
 ### Default Filters
 By default we are filtering out logs that are not tagged as "Cassandra". For what logs have that tag, see our generated filebeat.yml file. You can easily change this in the dashboard by clicking the X next to the filter (in the top left corner).
-![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-default-filter.png)
+![screenshot](../../screenshots/kibana-default-filter.png)
 
 ## Interacting with the Dashboard
 
 Sometimes the dashboard might give more information than you need. You can of course edit each visualization yourself by clicking on "Edit" and then going to a specific visualization and modifying it to your liking.
-![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-edit-button.png)
-![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-edit-visualization.png)
+![screenshot](../../screenshots/kibana-edit-button.png)
+![screenshot](../../screenshots/kibana-edit-visualization.png)
 
 However, you can also hide certain logs by clicking on their labels to quickly remove extra noise.
-![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-hide-by-clicking-label.png)
+![screenshot](../../screenshots/kibana-hide-by-clicking-label.png)
 
 
 ## Use our Pre-defined Queries
@@ -80,7 +80,7 @@ However, you can also hide certain logs by clicking on their labels to quickly r
 We also have some predefined queries that you can use in order to find out more details about the actual logs. 
 - Go to the "Discover" view and click on the dropdown that looks like a floppy disk. You can see some sample queries to get you started.
 - Alternatively, if you look at the source filters/queries for the timelion charts or the data tables in the dashboard, that might also give you some ideas of queries to use in Discover.
-![screenshot](https://github.com/Anant/cassandra.vision/blob/master/screenshots/kibana-saved-queries.png)
+![screenshot](../../screenshots/kibana-saved-queries.png)
 
 ## Other Queries to Consider
 Our filebeat.yml adds the following fields: 

@@ -315,6 +315,7 @@ class IngestTarball:
         - the individual log files can be left where they were, since unless filebeat is reset, it shouldn't run on those files again 
         - though it might be worth revisiting this; maybe change this and delete these later, especially if client doesn't want us to keep anything. But that would probably be done by another job, after all analysis is completed
         """
+        # TODO call shutdown on the cluster
         if successful:
             if self.clean_up_on_finish:
                 # remove everything we generated using this script

@@ -38,9 +38,18 @@ You should now have a tarball in `log-tarballs-to-ingest/<client_name>_<timestam
 
 It is ready to ingest using `ingest_tarball.py <client_name>_<timestamp>.tar.gz <client_name>` (and whatever flags you want to send in, see below for instructions on ingest_tarball.py)
 
+### What's next
+Now that you have a tarball with metrics from nodetool and your Cassandra log files, you are now ready to either ingest your log files into Elasticsearch/Kibana and generating a spreadsheet using TableAnalyzer. 
+
+- [Click here to start ingesting your log files into Elasticsearch/Kibana](../offline-log-ingester/README.md)
+- [Click here to start transforming your nodetool output into a formatted spreadsheet using TableAnalyzer](./TableAnalyzer/README.md#generate-spreadsheet)
+  - Note that at this point, we have already ran the `cfstats.receive.py` script for you. Now all you will have to do is transform it into a CSV and then convert that into a spreadsheet, following instructions in the link above.
+
+# Instructions for YAML files
+
 ## environments.yaml
 
-Follows same format as environments.yaml for TableAnalyzer. 
+The environments.yaml file follows same format as environments.yaml for TableAnalyzer. [Click here for instructions on how to setup environments.yaml](./TableAnalyzer/README.md). 
 
 ## settings.yaml
 

@@ -1,4 +1,5 @@
-# Log analysis with filebeat, elasticsearch & kibana
+# Installing Filebeat, Elasticsearch & Kibana for Log analysis
+Currently ansible is only setup to run using the apt package manager, but we plan on adding Redhat compatibility soon. 
 
 ### Install all
 Say hello to server to make sure ssh works. If you are running on localhost make an entry like this in your hosts.ini so you can bypass SSH.
@@ -20,12 +21,14 @@ The next command installs:
 ansible-playbook -i ./envs/elk/hosts.ini ./playbooks/elk-install.yml
 ```
 
-ToDo:
+## TODOs:
 - run elasticsearch with docker
 - playbook for redhat
 - Redhat on ansible
-```	
-https://www.elastic.co/guide/en/elasticsearch/reference/current/rpm.html
-https://www.elastic.co/guide/en/kibana/current/rpm.html
-https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html
-```
+
+#### Reference for Redhat Installation
+
+- https://www.elastic.co/guide/en/elasticsearch/reference/current/rpm.html
+- https://www.elastic.co/guide/en/kibana/current/rpm.html
+- https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html
+

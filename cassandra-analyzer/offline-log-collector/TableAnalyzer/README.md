@@ -1,4 +1,3 @@
-
 # cassandra.toolkit/TableAnalyzer
 
 ## Introduction
