@@ -28,34 +28,34 @@ The other way is to use the Kibana GUI to import, which we outline below. See [o
 #### Open the Stack Management Settings view 
 Click on the hamburger button and then "Stack Management" (or just go to http://<your-kibana-host>:5601/app/management)
 
-![screenshot](../../screenshots/kibana-click-stack-management.png)
+![screenshot](../../docs/assets/kibana-click-stack-management.png)
 
 #### Open Saved objects view 
 Click `Kibana` > `Saved Objects` on the left menu. (or just go to http://<your-kibana-host>:5601/app/management/kibana/objects).
 
-![screenshot](../../screenshots/kibana-click-saved-objects.png)
+![screenshot](../../docs/assets/kibana-click-saved-objects.png)
 
 #### Upload the file
 Click "Import" then upload the ndjson file. 
 
-![screenshot](../../screenshots/kibana-import-json.png)
+![screenshot](../../docs/assets/kibana-import-json.png)
 
 #### Open the Dashboard
 In the sidebar, click on `Kibana` > `Dashboard` to open the dashboard view and select the `Cassandra Logs Dashboard`.
 
-![screenshot](../../screenshots/kibana-select-your-dashboard.png)
+![screenshot](../../docs/assets/kibana-select-your-dashboard.png)
 
 #### Change the Time Filter
 Kibana will default to only showing the last 15 minutes. The makes more sense if you are monitoring a live cluster, but if you are doing offline log ingestion, make sure to change this to something more reasonable
 
-![screenshot](../../screenshots/kibana-change-time-filter.png)
+![screenshot](../../docs/assets/kibana-change-time-filter.png)
 
 
 ## Interpreting the pre-defined visualizations
 ### Charts we provide
 Currently we have some timelion charts with corresponding data tables next to them. 
 
-![screenshot](../../screenshots/kibana-dashboard.png)
+![screenshot](../../docs/assets/kibana-dashboard.png)
 
 Note that the data tables sometimes have extra filters that the timelion to its left does not have. E.g., sometimes a table has an extra filter that only shows loglevel ERROR logs, whereas the timelion to its left doesn't. 
 
@@ -63,16 +63,16 @@ Be careful to read the labels and look at the source queries if you are not sure
 
 ### Default Filters
 By default we are filtering out logs that are not tagged as "Cassandra". For what logs have that tag, see our generated filebeat.yml file. You can easily change this in the dashboard by clicking the X next to the filter (in the top left corner).
-![screenshot](../../screenshots/kibana-default-filter.png)
+![screenshot](../../docs/assets/kibana-default-filter.png)
 
 ## Interacting with the Dashboard
 
 Sometimes the dashboard might give more information than you need. You can of course edit each visualization yourself by clicking on "Edit" and then going to a specific visualization and modifying it to your liking.
-![screenshot](../../screenshots/kibana-edit-button.png)
-![screenshot](../../screenshots/kibana-edit-visualization.png)
+![screenshot](../../docs/assets/kibana-edit-button.png)
+![screenshot](../../docs/assets/kibana-edit-visualization.png)
 
 However, you can also hide certain logs by clicking on their labels to quickly remove extra noise.
-![screenshot](../../screenshots/kibana-hide-by-clicking-label.png)
+![screenshot](../../docs/assets/kibana-hide-by-clicking-label.png)
 
 
 ## Use our Pre-defined Queries
@@ -80,7 +80,7 @@ However, you can also hide certain logs by clicking on their labels to quickly r
 We also have some predefined queries that you can use in order to find out more details about the actual logs. 
 - Go to the "Discover" view and click on the dropdown that looks like a floppy disk. You can see some sample queries to get you started.
 - Alternatively, if you look at the source filters/queries for the timelion charts or the data tables in the dashboard, that might also give you some ideas of queries to use in Discover.
-![screenshot](../../screenshots/kibana-saved-queries.png)
+![screenshot](../../docs/assets/kibana-saved-queries.png)
 
 ## Other Queries to Consider
 Our filebeat.yml adds the following fields: 

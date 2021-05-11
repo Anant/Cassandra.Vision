@@ -18,7 +18,7 @@ This tool was created because we had a hard time explaining to non-believers tha
 
 TableAnalyzer can be broken down into two functions: 1) Collect cfstats/tablestats Output (“Receive”) and 2) Visualize cfstats/tablestats in an Excel Spreadsheet and JSON file (“Transform”).
 
-![table-analyzer-diagram-01.png](../../../screenshots/table-analyzer-diagram-01.png)
+![table-analyzer-diagram-01.png](../../../docs/assets/table-analyzer-diagram-01.png)
 
 #### Collect cfstats/tablestats Output
 
@@ -236,7 +236,7 @@ The spreadsheet by default shows information for each node (column: “Hostname�
 
 For example, to find “Traffic Skew” for reads, we can sort by “Table” first, then by “ReadCount”.
 
-![table-analyzer-diagram-02.png](../../../screenshots/table-analyzer-diagram-02.png)
+![table-analyzer-diagram-02.png](../../../docs/assets/table-analyzer-diagram-02.png)
 
 Now, all nodes that hold data for a given table are grouped together, and the read counts for each node can be easily compared to each other.
 
@@ -248,7 +248,7 @@ For further information on identifying and solving these data model issues, see 
 
 ### Stooge #1: Wide Partitions
 
-![table-analyzer-diagram-03.png](../../../screenshots/table-analyzer-diagram-03.png)
+![table-analyzer-diagram-03.png](../../../docs/assets/table-analyzer-diagram-03.png)
 
 Description:
 A partition is the fundamental unit of replication in Cassandra. A wide partition means that data is collecting in a large bucket rather than smaller ones. Partitions should not be bigger than 100MB.
@@ -262,7 +262,7 @@ How to Identify Using Spreadsheet:
 
 ### Stooge #2: Skew
 
-![table-analyzer-diagram-04.png](../../../screenshots/table-analyzer-diagram-04.png)
+![table-analyzer-diagram-04.png](../../../docs/assets/table-analyzer-diagram-04.png)
 
 #### Introduction
 You can find information on different types of skew below, including what columns in the spreadsheet to sort by in order to find that particular type of skew. 
@@ -321,7 +321,7 @@ Sort by values related to Latency (columns: “ReadLatency”, “WriteLatency�
 
 ### Stooge #3: Tombstones
 
-![table-analyzer-diagram-05.png](../../../screenshots/table-analyzer-diagram-05.png)
+![table-analyzer-diagram-05.png](../../../docs/assets/table-analyzer-diagram-05.png)
 
 Description:
 Tombstones are Cassandra’s way of being efficient with writes. It deletes data after the fact in compactions. When data is deleted, or a null value is inserted/ updated in an existing table, a tombstone record is added. 
