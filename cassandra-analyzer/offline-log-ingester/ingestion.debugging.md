@@ -10,6 +10,11 @@ Table of Contents
 # General Debugging Techniques
 Here are some tricks and tips you might try in general, that might be able to help you find out what the issue is for a number of errors you run into.
 
+## Debugging your log tarball
+Your tarball needs to be in the same format that is generated either using [offline-log-collector](../offline-log-collector/README.md) or from getting a diagnostic tarball from DSE opscenter. 
+
+If you have a tarball in a different format, or if you are having trouble using our tool and need to double check, [click here to find out what format our tool expects the log tarball to be in](./ingestion.tarball-format.md).
+
 ## Debugging the offline-log-ingester `filebeat.yaml` generator
 Sometimes the filebeat.yaml file that our Python script generates comes out incorrectly, or in a way that you did not expect. This could make it so it doesn't see your log files at all, sees only some log files, does not ingest log files to elasticsearch or kibana correctly, and so on. Here are some things you can do to debug the generated `filebeat.yaml` file:
 
@@ -107,8 +112,9 @@ This means that the ingested tarball looked something like this:
 The tarball is missing the `<archived-dir>/`, so our script thinks that `nodes` is the name of the `<archived-dir>/`. Consequently, it's looking for `nodes/nodes/` but can't find it. 
 
 ### Potential Solutions
-- reformat your tarball (i.e., put the `nodes` dir inside a parent directory) and zip it back up, and run script again. 
-      E.g., 
+- Reformat your tarball (i.e., put the `nodes` dir inside a parent directory) and zip it back up, and run script again. 
+    - The tarball needs to be in the format [described here](./ingestion.tarball-format.md). 
+    - In this particular case, you can reformat your tarball doing something like this:
       ```
       # navigate to where your extracted files are
       cd offline-log-ingester/logs-for-client/<client-name>/incident-<incident-id>/tmp

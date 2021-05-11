@@ -110,7 +110,7 @@ Our Dashboard is Called "Cassandra Logs Dashboard", and we have some queries nam
 (Have not tried yet)
 https://www.elastic.co/guide/en/kibana/7.8/saved-objects-api-export.html#ssaved-objects-api-create-example
 
-# Contributing
+# Development
 Please let us know if you have any other ideas of helpful visualizations, and feel free to make a PR as well!
 
 ## TODOs

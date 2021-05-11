@@ -1,11 +1,33 @@
 # Ingest Tarball of logs into Kibana
-After you collect your logs from your Cassandra cluster, you need to ingest it into your Dashboard. This is what this tool is for. Specifically, we ingest into Elasticsearch and Kibana using Filebeat.
+After you collect your logs from your Cassandra cluster (either using [offline-log-collector](../offline-log-collector/README.md) or from getting a diagnostic tarball from DSE opscenter), you need to ingest it into your Dashboard. This is what this tool is for. Specifically, we ingest into Elasticsearch and Kibana using Filebeat.
 
 Note that we have a starter Kibana Dashboard that you can import into kibana as well. [Click here to check it out](../kibana-dashboard/README.md).
 
-**A note about how offline-log-ingester uses Filebeat:**
+Table of Contents:
+- [Overview](#Overview)
+    - [What does this script do?](#What-does-this-script-do)
+    - [A note about how offline-log-ingester uses Filebeat](#A-note-about-how-offline-log-ingester-uses-Filebeat)
+- [Step 1: Setup](#Step-1-Setup)
+    - [Step 1.0: Prerequisites](#Step-10-Prerequisites)
+    - [Step 1.1: Install Requirements](#Step-11-Install-Requirements)
+    - [Step 1.2: Position your tarball](#Step-12-Position-your-tarball)
+    - [Step 2: Execute the python script](#Step-2-Execute-the-python-script)
 
-In case you have not used Filebeat before, we just want to point out that filebeat is normally used on a live cluster, and is constantly sending logs as they change to Elasticsearch. For our use case however, we are doing offline log monitoring. Consequently, instead of leaving Filebeat on in the background, and letting it continue to watch our logs, we are running it once on the logs from our tarball instead, and then turning it off.
+# Overview
+### What does this script do?
+The python script for offline-log-ingester:
+  - Unzips the log tarball
+  - Puts the logs in the folder we want it in (`./logs-for-client`)
+  - Generates a filebeat.yml to target these logs
+  - And finally, starts filebeat for one-off batch job that ingests these files into ELK
+
+Upon completion, you should have everything ready to view your logs in a nice dashboard in Kibana.
+
+### A note about how offline-log-ingester uses Filebeat
+
+In case you have not used Filebeat before, we just want to point out that filebeat is normally used on a live cluster, and is constantly sending logs as they change to Elasticsearch. For our use case however, we are doing offline log monitoring. Moreover, we want to run filebeat using our custom built filebeat.yml that targets our diagnostic tarball and then be able to stop filebeat and run it again on a different set of logs, whereas when doing online log monitoring, filebeat would be continually running and monitoring the same folders all the time.
+
+Consequently, instead of leaving Filebeat on in the background, and letting it continue to watch our logs, we are running it once on the logs from our tarball instead, and then turning it off.
 
 Keeping this in mind will help you understand the behavior of filebeat and how we are using it here.
 
@@ -13,6 +35,8 @@ Keeping this in mind will help you understand the behavior of filebeat and how w
 ### Step 1.0: Prerequisites
 - Requires python3 and pip3
 - Currently also requires `filebeat` to be callable from the commandline (ie make sure it's on the linux path).
+- A log tarball, either using [offline-log-collector](../offline-log-collector/README.md) or from getting a diagnostic tarball from DSE opscenter. 
+    - If you have a tarball in a different format, or if you are having trouble using our tool and need to double check, [click here to find out what format our tool expects the log tarball to be in](./ingestion.tarball-format.md).
 
 ### Step 1.1: Install Requirements
 
@@ -92,12 +116,7 @@ By default the script is pointing towards a kibana instance running on localhost
     ```
     NOTE currently only works with gzipped tarballs (ie file extension tar.gz)
 
-## What does the script do?
-  - unzip the tarball
-  - Put the logs in the folder we want it in
-  - Generate a filebeat.yml for this (will be v0.2; v0.1 just write this ourselves)
-  - start filebeat for one-off batch job that ingests these files into ELK 
-      * Perhaps later we will just have filebeat running continually on our server, watching  whatever gets placed in
+
 
 ## Want to add some logs and run script again with the same config?
 1) Add log files to the directory where similar logs are located: 
@@ -115,45 +134,11 @@ sudo filebeat -e -d "*" --c cassandra.vision/cassandra-analyzer/offline-log-inge
 - filebeat.yaml will be at: cassandra.vision/cassandra-analyzer/offline-log-ingester/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yml
 - Alternatively, if filebeat is still running (and is using the filebeat.yaml created by this script), you can just add the separate log files and it will find and ingest them. 
 
-## Expected Tarball Format
-A number of errors can occur if the tarball or zip file with the logs is not formatted exactly like tarballs received from opscenter or our [`offline-log-collector`](https://github.com/Anant/cassandra.vision/tree/master/cassandra-analyzer/offline-log-collector) tool.
-
-### What we're expecting:
-```
-<tarball-filename>.tar.gz OR <tarball-filename>.zip
-    <archived-dir>/ 
-        nodes/
-            <ip-1>/
-                logs/
-                    cassandra/
-                        audit/audit.log (optional)
-                        system.log
-                        gremlin.log (optional)
-                        debug.log (optional)
-                        output.log (optional)
-                        gc.log (optional)
-                    spark/
-                        master/
-                            master.log
-                        worker/
-                            worker.log
-            <ip-2>/
-                … (same as ip-1)
-            … (other ips)
-```
-
-Notes:
-- Additional files won't hurt anything. 
-- `<archived-dir>` (see above) is often the same name as `<tarball-filename>` but doesn't need to be.
-- the absence of optional files mentioned above won't stop the script from running to the end and ingesting whatever files are there, but the presence of those files means those files will be ingested too. See `./helper_classes/filebeat_yml.py` for what files the filebeat ingester is looking for. 
-- all log files can either end in `.log` as above, or `.log*`. Often this looks something like `gc.log.0` or `gc.log.3.current`. All that end in `.log*` will be ingested. 
-
 # Debugging
 [Click here for help debugging offline-log-ingester](./ingestion.debugging.md).
 
 # Testing
 [Click here for instructions for integration testing](./test/README.md).
-
 
 # Development
 ### Adding more logs to our tarball

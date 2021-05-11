@@ -32,3 +32,5 @@ ansible-playbook -i ./envs/elk/hosts.ini ./playbooks/elk-install.yml
 - https://www.elastic.co/guide/en/kibana/current/rpm.html
 - https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html
 
+## Development
+TODO add instructions for developing and contributing to elastic-kibana-ansible.

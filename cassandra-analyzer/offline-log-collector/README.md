@@ -14,6 +14,7 @@ This tool also executes commands from TableAnalyzer and NodeAnalyzer. Note thoug
         - [Step #1.2.2: Create a `config/settings.yaml` File](#Step-122-Create-a-configsettingsyaml-File)
 - [Step #2: Run it](#Step-2-run-it)
 - [Testing](#testing)
+- [Development](#development)
 - [TODOs/Project Backlog](#todosproject-backlog)
 
 # Step #1: Setup
@@ -117,9 +118,11 @@ Now that you have a tarball with your node's logs, as well as `cfstats`/`tablest
 - [Click here to start transforming your nodetool output into a formatted spreadsheet using TableAnalyzer](./TableAnalyzer/README.md#generate-spreadsheet)
   - Note that at this point, we have already ran the `cfstats.receive.py` script for you. Now all you will have to do is transform it into a CSV and then convert that into a spreadsheet, following instructions in the link above.
 
-  # Testing
-  [For instructions on testing, see notes here](./test/README.md)
+# Testing
+[For instructions on testing, see notes here](./test/README.md)
 
+# Development
+TODO add instructions for developing offline-log-collector
 
 # TODOs/Project Backlog
 - SSH Support, for remote execution on multiple nodes at once.
