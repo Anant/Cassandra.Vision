@@ -2,8 +2,34 @@
 An importable kibana dashboard to use that's compatible with our filebeat setup. Built in Kibana 7.8 but should be compatible with other versions too, especially 7.x versions.
 
 Table of Contents
+- [Overview](#Overview)
+- [Setup](#setup)
+  * [Import the Dashboard](#import-the-dashboard)
+    + [Option A: Elasticsearch REST API (recommended)](#option-a--elasticsearch-rest-api--recommended-)
+    + [Option B: Kibana GUI](#option-b--kibana-gui)
+      - [Step B.1: Open the Stack Management Settings view](#step-b1--open-the-stack-management-settings-view)
+      - [Step B.2: Open Saved objects view](#step-b2--open-saved-objects-view)
+      - [Step B.3: Upload the file](#step-b3--upload-the-file)
+      - [Step B.4: Open the Dashboard](#step-b4--open-the-dashboard)
+      - [Step B.5: Change the Time Filter](#step-b5--change-the-time-filter)
+- [Interpreting the pre-defined visualizations](#interpreting-the-pre-defined-visualizations)
+    + [Charts we provide](#charts-we-provide)
+    + [Default Filters](#default-filters)
+  * [Interacting with the Dashboard](#interacting-with-the-dashboard)
+  * [Use our Pre-defined Queries](#use-our-pre-defined-queries)
+  * [Other Queries to Consider](#other-queries-to-consider)
+  * [Further Reading](#further-reading)
+- [Development](#development)
+  * [Add a new visualization](#add-a-new-visualization)
+  * [Export saved dashboards, queries, and visualizations](#export-saved-dashboards--queries--and-visualizations)
+    + [Export Using Kibana GUI](#export-using-kibana-gui)
+    + [Export Using API](#export-using-api)
+  * [TODOs](#todos)
 
-# Description 
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+
+# Overview 
 This Kibana dashboard provides several standard KQL/Lucene queries ready to go, some timelion charts, log counts etc, so that all the user has to do is import the kibana dashboard config from our repo. 
 
 This will make our log analysis process even faster, helping us deliver analyses in a more timely manner while keeping costs low. This also helps make our analysis more consistent, removing likelihood of using improper or misleading queries.
@@ -44,31 +70,30 @@ Like GUIs? No problem! The other way is to use the Kibana GUI to import, which w
 
 See [official documentation](https://www.elastic.co/guide/en/kibana/7.8/managing-saved-objects.html#managing-saved-objects-export-objects) for more details.
 
-#### Open the Stack Management Settings view 
+#### Step B.1: Open the Stack Management Settings view 
 Click on the hamburger button and then "Stack Management" (or just go to http://<your-kibana-host>:5601/app/management)
 
 ![screenshot](../../docs/assets/kibana-click-stack-management.png)
 
-#### Open Saved objects view 
+#### Step B.2: Open Saved objects view 
 Click `Kibana` > `Saved Objects` on the left menu. (or just go to http://<your-kibana-host>:5601/app/management/kibana/objects).
 
 ![screenshot](../../docs/assets/kibana-click-saved-objects.png)
 
-#### Upload the file
+#### Step B.3: Upload the file
 Click "Import" then upload the ndjson file. 
 
 ![screenshot](../../docs/assets/kibana-import-json.png)
 
-#### Open the Dashboard
+#### Step B.4: Open the Dashboard
 In the sidebar, click on `Kibana` > `Dashboard` to open the dashboard view and select the `Cassandra Logs Dashboard`.
 
 ![screenshot](../../docs/assets/kibana-select-your-dashboard.png)
 
-#### Change the Time Filter
+#### Step B.5: Change the Time Filter
 Kibana will default to only showing the last 15 minutes. The makes more sense if you are monitoring a live cluster, but if you are doing offline log ingestion, make sure to change this to something more reasonable
 
 ![screenshot](../../docs/assets/kibana-change-time-filter.png)
-
 
 # Interpreting the pre-defined visualizations
 ### Charts we provide
@@ -115,9 +140,12 @@ Our filebeat.yml adds the following fields:
 - `ingest.class`: Java Class that is related to this log e.g., `CassandraDaemon` 
 - `ingest.host-name`: ip of the node that generated this log, e.g., `1.2.3.4`. Extracted from the filepath of the log archive
 - `ingest.message`: takes what's left of the log message and outputs it here.
+- `ingest.incident.id`: this is the incident id that we generate in the offline-log-ingester tool. It is based on last modified date of the tarball that got ingested. 
+- `log.file.path`: Actually, we don't set this one, it's set by default. But gives the path to the file. Useful for searching for particular log files. E.g., you can do a search like this: `log.file.path:*gremlin.log` to get only gremlin logs.
 - `tags`: tags we set based on what type of log it is. 
     * One tag in particular that we want to highlight is that whatever `client_name` you passed in when running `ingest_tarball.py` is set on the tags as well, so you can query for that if you want.
     * We also set `cassandra`, `spark`, or `linux-system` depending on where this log originated from, as determined by the file path in the log archive that we ingested.
+    * To find all the tags we set, check out [`filebeat_yml.py`](../offline-log-ingester/helper_classes/filebeat_yml.py) under the `log_type_definitions` variable.
 
 Of course, you can also just query the raw log message that these other fields were extracted from (namely, `message`).
 
@@ -131,6 +159,7 @@ Want more information on how to use Kibana to analyze your logs? Here are some l
 ## Add a new visualization
 - Don't save the time filters. This way, the time filter will only be set by the dashboard, not the visualization.
 - Probably do save the filters, assuming that the filter is an important part of the visualization.
+- Please let us know if you have any other ideas of helpful visualizations, and feel free to make a PR as well!
 
 ## Export saved dashboards, queries, and visualizations
 ### Export Using Kibana GUI
@@ -141,8 +170,6 @@ Our Dashboard is Called "Cassandra Logs Dashboard", and we have some queries nam
 (Have not tried yet)
 https://www.elastic.co/guide/en/kibana/7.8/saved-objects-api-export.html#ssaved-objects-api-create-example
 
-# Development
-Please let us know if you have any other ideas of helpful visualizations, and feel free to make a PR as well!
 
 ## TODOs
 - add scripts to take advantage of the export/import saved objects api, to make importing even easier

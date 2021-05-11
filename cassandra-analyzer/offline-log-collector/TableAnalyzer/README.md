@@ -1,5 +1,41 @@
 # cassandra.toolkit/TableAnalyzer
 
+Table of Contents:
+* [Introduction](#introduction)
+  + [TableAnalyzer Among Other Cassandra Tools](#tableanalyzer-among-other-cassandra-tools)
+  + [Purpose](#purpose)
+  + [What TableAnalyzer Actually Does](#what-tableanalyzer-actually-does)
+    - [Collect cfstats/tablestats Output](#collect-cfstatstablestats-output)
+    - [Visualize cfstats/tablestats (Excel Spreadsheet and JSON)](#visualize-cfstatstablestats-excel-spreadsheet-and-json)
+* [Step 1: Installation and Setup](#Step-1-installation-and-setup)
+  + [Install dependencies](#install-dependencies)
+  + [Prepare for SSH: Add SSH Keys (if using SSH)](#prepare-for-ssh-add-ssh-keys-if-using-ssh)
+  + [Set configuration: Create environments.yaml file](#set-configuration-create-environmentsyaml-file)
+    - [Setting the different values in the environments.yaml config](#setting-the-different-values-in-the-environmentsyaml-config)
+    - [Example Configuration](#example-configuration)
+    - [Create Data Directories](#create-data-directories)
+* [Step 2: Collect Tablestats/CFStats Output](#Step-2-collect-tablestatscfstats-output)
+  + [Option #1: Using the extracted contents of a diagnostics tarball from DSE OpsCenter](#option-1-using-the-extracted-contents-of-a-diagnostics-tarball-from-dse-opscenter)
+  + [Option #2: Using nodetool cfstats or nodetool tablestats from a local Cassandra instance](#option-2-using-nodetool-cfstats-or-nodetool-tablestats-from-a-local-cassandra-instance)
+  + [Option #3: Using nodetool cfstats or nodetool tablestats from a Cassandra instance through SSH](#option-3-using-nodetool-cfstats-or-nodetool-tablestats-from-a-cassandra-instance-through-ssh)
+* [Step 3: Generate Spreadsheet](#step-3-generate-spreadsheet)
+  + [Convert to CSV](#convert-to-csv)
+  + [Convert to spreadsheet](#convert-to-spreadsheet)
+* [Step 4: Analyze Tablestats using Spreadsheet](#step-4-analyze-tablestats-using-spreadsheet)
+  + [Introduction](#introduction-1)
+    - [How to use the spreadsheet](#how-to-use-the-spreadsheet)
+    - [Further Reading](#further-reading)
+  + [Stooge #1: Wide Partitions](#stooge-1-wide-partitions)
+  + [Stooge #2: Skew](#stooge-2-skew)
+    - [Introduction](#introduction-2)
+    - [Partition Skew](#partition-skew)
+    - [Data Skew](#data-skew)
+    - [Traffic Skew](#traffic-skew)
+    - [Tombstone Skew](#tombstone-skew)
+    - [Latency Skew](#latency-skew)
+  + [Stooge #3: Tombstones](#stooge-3-tombstones)
+* [Credits](#credits)
+
 ## Introduction
 
 TableAnalyzer is a tool for analyzing Cassandra (CFStats/TableStats) output that visualizes variance in metrics between nodes. We use TableAnalyzer to generate a conditionally-formatted spreadsheet that can be used to perform data model review.
@@ -34,7 +70,7 @@ TableAnalyzer can collect the cfstats/tablestats by:
 
 Once it has the stats, TableAnalyzer parses and transforms the stats into a CSV file format, which then is transformed into a conditionally formatted Excel file (xlsx). It also creates the data set as JSON which can be then sent to ElasticSearch, New Relic, etc. for further visualization.
 
-## Installation and Setup
+## Step 1: Installation and Setup
 
 ### Install dependencies
 
@@ -132,7 +168,7 @@ Currently, our scripts do not make data directories for you, and so you have to 
 # mkdir -p ./data/<region>/<environment>
 mkdir -p ./data/uswest/prod 
 ```
-## Collect Tablestats/CFStats Output
+## Step 2: Collect Tablestats/CFStats Output
 
 Table Analyzer can collect the cfstats/tablestats by:
 
@@ -196,7 +232,7 @@ python3 cfstats.receive.py uswest prod cassandra 1
 #### Expected result
 At this point, there should now be .txt files, one for each node, in the `./data/<region>/<cluster>/` directory (e.g., ./data/uswest/prod`).
 
-## Generate Spreadsheet
+## Step 3: Generate Spreadsheet
 
 Now that we have our tablestats output written to .txt files, we want to convert these files into a csv, and then convert that csv into a .xlsx format. The advantage of using the Excel format is being able to use formatting, and in particular conditional formatting. This conditional formatting will make it easy to see differences between nodes and outliers.
 
@@ -211,16 +247,16 @@ python3 cfstats.transform.py uswest prod cassandra 3 1
 
 * There should now  be .csv files, one for each node, in the ./data/uswest/prod dir
 * There might also be a few other outputted csv files that aggregate for each node (e.g., uswest.prod.cfstats.csv, uswest.prod.cfstats.issues.csv, uswest.prod.cfstats.pivot.csv) and json file (e.g., uswest.prod.cfstats.pivot.json)
-* * uswest.prod.cfstats.pivot.csv is the most important one
+  * uswest.prod.cfstats.pivot.csv is the most important one
 
-#### Convert to spreadsheet
+### Convert to spreadsheet
 For this we use csv2formattedxls.py:
 
 ```
 # python3 ./csv2formattedxls.py ./data/<region>/<cluster>/<region>.<cluster>.cfstats.pivot.csv ./data/<region>/<cluster>/<region>.<cluster>.cfstats.pivot.xlsx
 python3 ./csv2formattedxls.py data/uswest/prod/uswest.prod.cfstats.pivot.csv data/uswest/prod/uswest.prod.cfstats.xlsx
 ```
-## Analyze Tablestats using Spreadsheet
+## Step 4: Analyze Tablestats using Spreadsheet
 
 ### Introduction 
 

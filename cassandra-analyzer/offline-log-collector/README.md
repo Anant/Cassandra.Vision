@@ -115,7 +115,7 @@ In case you need to set some options, several arguments are available to you.
 Now that you have a tarball with your node's logs, as well as `cfstats`/`tablestats` output, you are ready to ingest your log files into Elasticsearch/Kibana and generate a spreadsheet using TableAnalyzer. 
 
 - [Click here to start ingesting your log files into Elasticsearch/Kibana](../offline-log-ingester/README.md)
-- [Click here to start transforming your nodetool output into a formatted spreadsheet using TableAnalyzer](./TableAnalyzer/README.md#generate-spreadsheet)
+- [Click here to start transforming your nodetool output into a formatted spreadsheet using TableAnalyzer](./TableAnalyzer/README.md#step-3-generate-spreadsheet)
   - Note that at this point, we have already ran the `cfstats.receive.py` script for you. Now all you will have to do is transform it into a CSV and then convert that into a spreadsheet, following instructions in the link above.
 
 # Testing
