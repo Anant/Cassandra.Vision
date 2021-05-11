@@ -396,7 +396,7 @@ class FilebeatYML:
         """
         if self.debug_mode:
             # won't output to es, will output to console
-            del self.template_yaml_as_dict["output"]["logstash"]
+            del self.template_yaml_as_dict["output"]["elasticsearch"]
             self.template_yaml_as_dict["output"]["console"]["pretty"] = True
 
     def set_es_hosts(self):

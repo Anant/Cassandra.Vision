@@ -1,6 +1,11 @@
 # Expected Tarball Format
 A number of errors can occur if the tarball or zip file with the logs is not formatted exactly like tarballs received from opscenter or our [`offline-log-collector`](../offline-log-collector/README.md) tool. Here are some instructions to make sure your tarball will work in offline-log-ingester.
 
+### Format: .tar.gz or .zip
+Our tool, the offline-log-ingester, is made primarily to handle `.tar.gz` files, but also supports .zip files. 
+
+If this is a .zip, the script will unarchive the archive still but will likely fail unless the directory layout is exactly what DSE opsecenter returns. 
+
 ### What we're expecting:
 ```
 <tarball-filename>.tar.gz OR <tarball-filename>.zip

@@ -301,6 +301,8 @@ class IngestTarball:
             print(f"Running filebeat command: {start_filebeat_cmd}")
 
             # TODO error handle this
+            # right now, even if returns error, nothing happens, it continues as if successful. Probalby use subprocess instead. 
+            # https://stackoverflow.com/questions/12373563/python-try-block-does-not-catch-os-system-exceptions
             os.system(start_filebeat_cmd)
 
             # give instructions for reusing this 
@@ -320,9 +322,16 @@ class IngestTarball:
             if self.clean_up_on_finish:
                 # remove everything we generated using this script
                 shutil.rmtree(self.path_for_client)
+            else:
+                print("Script was not ran with --cleanup-on-finish. Not cleaning up generated files.")
+                # until we handle errors from filebeat, don't tell users that it was successful here. Otherwise, you get false positives. 
+                # print("script ran successfully, but script was not ran with --cleanup-on-finish. Not cleaning up generated files.")
         else:
             # this is it for now
-            print("failed to ingest tarball")
+            if self.clean_up_on_finish:
+                print("failed to ingest tarball, not cleaning up")
+            else:
+                print("failed to ingest tarball AND script was not ran with --cleanup-on-finish. Not cleaning up generated files.")
 
     ###################################################
     # do it all
