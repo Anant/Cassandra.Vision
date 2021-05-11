@@ -38,7 +38,7 @@ Sometimes when you are debugging, you want to just debug the generated filebeat.
 
 Note however that if you run offline-log-ingester again, it will generate a new write filebeat.yml file and any changes you make will be overwritten by the newly generated file. You can move your filebeat.yml to somewhere else to get around this. 
 
-See [instructions here](./README.md#want-to-run-the-script-again-with-the-same-config) for running the generated yml again.
+See [instructions here](./README.md#want-to-run-filebeat-again-with-the-same-config) for running the generated yml again.
 
 ## Debugging your filebeat installation
 ### Try `sudo filebeat setup`
