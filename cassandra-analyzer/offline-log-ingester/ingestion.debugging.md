@@ -1,4 +1,4 @@
-# Debugging
+# Ingestion - Debugging
 Listed below are some common errors you might run into while running offling-log-ingester, as well as potential solutions. 
 
 Table of Contents

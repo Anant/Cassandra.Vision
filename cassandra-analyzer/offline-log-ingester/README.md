@@ -15,7 +15,7 @@ Table of Contents:
 - [Step 3: Execute the python script](#Step-3-Execute-the-python-script)
 - [Step 4: View the Logs in Kibana](#Step-4-View-the-Logs-in-Kibana)
     - [Option A: Import our Dashboard](#Option-A-Import-our-Dashboard)
-    - [Option B: Add an Index Pattern for Filebeat](#Option-B-Add-an-index-Pattern-for-filebeat)
+    - [Option B: Manually Add an Index Pattern for Filebeat](#Option-B-Manually-Add-an-index-Pattern-for-filebeat)
 - [Step 5: What's next](#Step-5-Whats-next)
 - [Debugging](#debugging)
 - [Testing](#testing)
@@ -226,18 +226,17 @@ This is by far the recommended way to get started. Simply [follow our instructio
 
 [Click here to get started](../kibana-dashboard/README.md).
 
-## Option B: Add an Index Pattern for Filebeat
+## Option B: Manually Add an Index Pattern for Filebeat
 
 For better or for worse, the Kibana GUI changes from time to time. But the general process should be roughly the same regardless of the version of Kibana you are using. 
 
 >    **Protip:** Having trouble finding this button? Try navigating using the url instead: `http://<kibana-host>:5601/app/management/kibana/indexPatterns/create`. 
 > 
-> E.g., if kibana is running on localhost: `http://localhost:5601/app/management/kibana/indexPatterns/create`.
+> E.g., if kibana is running on localhost: <http://localhost:5601/app/management/kibana/indexPatterns/create>
 > 
 > Now you can skip to [Step 4.B.5](#step-4B5-Add-filebeat--as-index-pattern) below!
 
-### Step 4.B.1: Click the hamburger icon to open the menu
-![screenshot](../../docs/assets/kibana.home.hamburger.png)
+### Step 4.B.1: Click the hamburger icon to open the menu![screenshot](../../docs/assets/kibana.home.hamburger.png)
 
 ### Step 4.B.2: Scroll down and on the left-hand side, under "Management", click on "Stack Management"
 ![screenshot](../../docs/assets/kibana.home.stack-management-btn.png)
