@@ -3,6 +3,7 @@ from copy import deepcopy
 import yaml
 import subprocess
 import shutil
+from pathlib import Path
 
 class Node:
     """
@@ -118,7 +119,9 @@ class Node:
         for path in all_log_paths:
             # check if is dir
             print("checking node", self.hostname, "for cassandra logs in", path)
-            if os.path.isdir(path):
+            # allow tildes in the paths
+            expanded_path = os.path.expanduser(path)
+            if os.path.isdir(expanded_path):
                 # assuming there's only one match per node
                 match = path
                 break
@@ -127,15 +130,19 @@ class Node:
 
     def find_conf_dir(self, all_config_paths):
         """
-        takes list of file paths, and checks each one to see which of them works for this node
+        find where this node stores its C* conf files
+        - takes list of file paths, and checks each one to see which of them works for this node
         """
         match = None
         for path in all_config_paths:
             # check if is dir
             print("checking node", self.hostname, "for cassandra configs in", path)
-            if os.path.isdir(path):
+            # allow tildes in the paths
+            expanded_path = os.path.expanduser(path)
+            if os.path.isdir(expanded_path):
                 # assuming there's only one match per node
                 match = path
+                print("conf dir found at:", path)
                 break
 
         if match == None:

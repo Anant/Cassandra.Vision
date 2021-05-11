@@ -1,16 +1,22 @@
 cluster_settings:
-  path_to_logs: 
-    # list all paths to logs that you use in this cluster. A path specified below should match a node's log directory at least once
-    - /var/log/cassandra
-  path_to_configs: 
-    # list all paths to configs that you use in this cluster. A path specified below should match a node's log directory at least once
-    - /etc/dse/cassandra/
   # TODO can get using nodetool like is done in TableAnalyzer/cfstats.receive.py#42, `nodetool version`
   # one of: "dse", "cassandra" (only supporting those for now, and maybe that's enough)
-  cassandra_distribution: dse
+  cassandra_distribution: cassandra
+
+  # normally path to logs and config will be same across the cluster, so wouldn't have to set one per node. But you do have to with ccm
+  paths_to_logs: 
+    # "By default, ccm stores all the node data and configuration files under ~/.ccm/cluster_name/. This can be overridden using the --config-dir option with each command.". But we aren't overriding.
+    - ~/.ccm/test_cluster/node1/logs/
+    - ~/.ccm/test_cluster/node2/logs/
+  paths_to_configs: 
+    # "By default, ccm stores all the node data and configuration files under ~/.ccm/cluster_name/. This can be overridden using the --config-dir option with each command.". But we aren't overriding.
+    - ~/.ccm/test_cluster/node1/conf
+    - ~/.ccm/test_cluster/node2/conf
 
 settings_by_node:
   127.0.0.1:
-    nodetool_cmd: ccm node1 nodetool
+    # makes sure to use the venv so can execute ccm as root, then execute nodetool using ccm
+    nodetool_cmd: source ../venv/bin/activate && ccm node1 nodetool
   127.0.0.2:
-    nodetool_cmd: ccm node2 nodetool
+    # makes sure to use the venv so can execute ccm as root, then execute nodetool using ccm
+    nodetool_cmd: source ../venv/bin/activate && ccm node2 nodetool

@@ -34,12 +34,12 @@ class CollectLogsTest:
         But since they set it up to run as a cli, doing it that way for now
         """
         try:
-            cassandra_version = "3.11.7"
+            cassandra_version = "3.11.10"
 
             # nodes in cluster
             node_count = 2
 
-            # ends up being like: ccm create test_cluster -v 3.11.7 -n 2 -s
+            # ends up being like: ccm create test_cluster -v 3.11.10 -n 2 -s
             cmd_with_args = f"ccm create test_cluster -v {cassandra_version} -n {node_count} -s"
 
             subprocess.run(cmd_with_args, shell=True, check = True)
@@ -56,6 +56,9 @@ class CollectLogsTest:
             "clean_up_on_finish": True,
             "path_to_settings_file": settings_yml_path,
             "path_to_environments_file": environments_yml_path,
+            # actually, does recognize arg for custom nodetool command
+            "skip_node_analyzer": False,
+            "skip_table_analyzer": True,
         }
 
         collectLogs = CollectLogs(client_name="test_client", **options)
@@ -97,5 +100,6 @@ if __name__ == '__main__':
         print("-- TEST FAILED --")
 
     # no matter what, try to cleanup the cluster
+    # TODO add back in
     print("\n\ncleanup CollectLogs test")
     test.cleanup()

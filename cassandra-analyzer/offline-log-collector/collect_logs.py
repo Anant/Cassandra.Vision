@@ -103,8 +103,12 @@ class CollectLogs:
         # other options
         ##################
         self.clean_up_on_finish = kwargs.get("clean_up_on_finish", False)
-        self.path_to_settings_file = kwargs.get("path_to_settings_file", default_settings_yml_path)
-        self.path_to_environments_file = kwargs.get("path_to_environments_file", default_environments_yml_path)
+
+        # expanding tilde to the home dir automatically, in case they specify using path from home dir
+        self.path_to_settings_file = os.path.expanduser(kwargs.get("path_to_settings_file", default_settings_yml_path))
+        self.path_to_environments_file = os.path.expanduser(kwargs.get("path_to_environments_file", default_environments_yml_path))
+        self.skip_node_analyzer = kwargs.get("skip_node_analyzer", False)
+        self.skip_table_analyzer = kwargs.get("skip_table_analyzer", False)
 
     ###################################################
     # helpers
@@ -176,6 +180,7 @@ class CollectLogs:
         default_log_path = log_path_defaults[self.cassandra_distribution]
         default_config_path = config_path_defaults[self.cassandra_distribution]
 
+        # these will be a list of strings representing paths
         print("setting log and config paths")
         self.all_log_paths = cluster_settings.get("paths_to_logs", [default_log_path])
         self.all_config_paths = cluster_settings.get("paths_to_configs", [default_config_path])
@@ -283,7 +288,6 @@ class CollectLogs:
         iterate over each region, and each datacenter within each region, and each node within each data center
         for each, run TableAnalyzer's nodetool.receive.v2.sh script
         """
-
         # run TableAnalyzer on each datacenter in each region
         for region in self.regions:
             for datacenter_name in self.datacenters_by_region[region]:
@@ -373,14 +377,22 @@ class CollectLogs:
             print("\n=== Parsing Settings ===")
             self.parse_settings()
 
-            print("\n=== Get table stats and place in tmp directory ===")
-            self.analyze_cluster()
+            if (self.skip_table_analyzer):
+                print("\n=== (skipping TableAnalyzer for this run) ===")
+                # skip this whole step for now, since this only does table analyzer
+            else:
+                print("\n=== Get table stats and place in tmp directory ===")
+                self.analyze_cluster()
 
             print("\n=== Add nodes found by `nodetool status` ===")
+            # TODO not yet doing anything
             self.add_additional_nodes()
 
-            print("\n=== Get logs and nodetool data from each node and place in tmp directory ===")
-            self.analyze_each_node()
+            if self.skip_node_analyzer:
+                print("\n=== (skipping NodeAnalyzer for this run) ===")
+            else:
+                print("\n=== Get logs and nodetool data from each node and place in tmp directory ===")
+                self.analyze_each_node()
 
             print("\n=== Creating directory for each host ===")
             self.create_dirs_for_hosts()
@@ -434,6 +446,8 @@ if __name__ == '__main__':
     parser.set_defaults(path_to_settings_file=default_settings_yml_path)
 
     parser.add_argument('--environments-file', dest='path_to_environments_file', action='store_true', help="path to environments file. Defaults to config/environments.yaml")
+    parser.add_argument('--skip-table-analyzer', dest='skip_table_analyzer', action='store_true', help="if set, will not run TableAnalyzer receive")
+    parser.add_argument('--skip-node-analyzer', dest='skip_node_analyzer', action='store_true', help="if set, will not run NodeAnalyzer commands")
     parser.set_defaults(path_to_environments_file=default_environments_yml_path)
 
     args = parser.parse_args()
@@ -443,6 +457,8 @@ if __name__ == '__main__':
         "tarball_filename": args.tarball_filename,
         "path_to_settings_file": args.path_to_settings_file,
         "path_to_environments_file": args.path_to_environments_file,
+        "skip_node_analyzer": args.skip_node_analyzer,
+        "skip_table_analyzer": args.skip_table_analyzer,
     }
 
     collectLogs = CollectLogs(args.client_name, **options)
