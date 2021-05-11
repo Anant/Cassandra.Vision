@@ -27,7 +27,7 @@ You might also need to use the `--ask-become-pass` flag whenever executing the p
 ansible-playbook -i ./envs/elk/hosts.ini ./playbooks/elk-install.yml --ask-become-pass
 ```
 
-### Test SSH connection
+### Test connection
 To make sure your hosts.ini file is configured correctly, run the `hello.yml` playbook.
 ```
 ansible-playbook -i ./envs/elk/hosts.ini ./playbooks/hello.yml
