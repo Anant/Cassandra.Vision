@@ -100,6 +100,5 @@ if __name__ == '__main__':
         print("-- TEST FAILED --")
 
     # no matter what, try to cleanup the cluster
-    # TODO add back in
     print("\n\ncleanup CollectLogs test")
     test.cleanup()

@@ -2,9 +2,10 @@
 
 # Instructions: 
 ### Prerequisites 
-If you haven't already, run the test script for `offline-log-collector` first. [You can find instructions here](../../offline-log-collector/test/README.md).
-
-You will also need to make sure you have all the prerequisites for running the main ingester script as [found here](../README.md#step-10-prerequisites).
+- A test tarball
+    - If you haven't already, run the test script for `offline-log-collector` first. [You can find instructions here](../../offline-log-collector/test/README.md).
+- Main ingester prerequisites
+    - You will also need to make sure you have all the prerequisites for running the main ingester script as [found here](../README.md#step-10-prerequisites).
 
 ### Install requirements
 You will need to install all the requirements for running the main ingester script as [found here](../README.md#step-11-install-requirements).

@@ -322,6 +322,7 @@ class IngestTarball:
             if self.clean_up_on_finish:
                 # remove everything we generated using this script
                 shutil.rmtree(self.path_for_client)
+                print("Cleanup Successful.")
             else:
                 print("Script was not ran with --cleanup-on-finish. Not cleaning up generated files.")
                 # until we handle errors from filebeat, don't tell users that it was successful here. Otherwise, you get false positives. 
@@ -373,7 +374,7 @@ class IngestTarball:
         self.cleanup(successful)
 
         if successful:
-            print("Success.")
+            print("=== Success. ===")
 
 if __name__ == '__main__':
     """

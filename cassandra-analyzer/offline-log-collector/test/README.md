@@ -14,7 +14,8 @@ However, it will not run TableAnalyzer as of right now, since it is not yet conf
 Navigate to this folder (`cassandra-analyzer/offline-log-collector/`) in a terminal, then just run this:
 
 ```
-python3 -m venv venv
+python3 -m venv ./venv
+source ./venv/bin/activate
 # install project requirements
 pip3 install -r requirements.txt
 
@@ -28,7 +29,8 @@ python3 collect_logs_test.py
 
 Note:
 - Make sure to use venv, so that when calling `ccm node1 nodetool` for example in NodeAnalyzer, it can work even though NodeAnalyzer runs as root user. 
-- `config/settings.test.yaml` is expecting that the `venv` dir is found at `./venv` and that the script is called from the `test` dir. Following the instructions as specified above will do this for you.
+- `config/settings.test.yaml` is expecting that the `venv` dir is found at `cassandra-analyzer/offline-log-collector/venv` and that the script is called from the `test` dir. Following the instructions as specified above will do this for you.
+- In other words, make sure you follow the instructions above exactly as specified.
 
 ### What's Next?
 You now have a tarball that you can test using `offline-log-ingester`. [Head over to instructions for `offline-log-ingester` to get started](../../offline-log-ingester/test/README.md).
