@@ -1,13 +1,16 @@
 # cassandra.vision
 Tools for Offline Cassandra log and nodetool output analysis via ELK/FEK (Elastic, Logstash, Filebeat &amp; Kibana) and Visual analysis of TableStats/CFStats using Excel. 
 
-These tools are for offline cluster monitoring. If you are looking online cluster monitoring, [check out Cassandra.toolkit](https://github.com/Anant/cassandra.toolkit/blob/master/docs/setup/setup.recommendations.md#our-recommendation-monitoring) instead.
+These tools are for offline cluster monitoring. If you are looking *online* cluster monitoring, [check out Cassandra.toolkit instead](https://github.com/Anant/cassandra.toolkit/blob/master/docs/setup/setup.recommendations.md#our-recommendation-monitoring).
 
 ### Table of Contents:
 - [Overview](#overview)
 - [Getting Started](#getting-started)
 
 # Overview
+
+### What is Offline Log Analysis?
+
 Sometimes it is preferable to do "online log analysis", which is where you collect logs and metrics on a live cluster and monitor using Kibana, Grafana or some other dashboard. However, there are situations where this is not possible or preferable and you want to grab some logs, put them in a tarball, and ingest into your dashboard, often running in a separate host. We call this "offline log analysis". 
 
 # Getting Started

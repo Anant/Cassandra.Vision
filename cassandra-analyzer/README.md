@@ -44,5 +44,3 @@ See [`./offline-log-ingester`](./offline-log-ingester/README.md) for ingesting l
 A formatted spreadsheet can make it easy to run a data model review on your cluster. Follow the steps below to begin.
 
 If you ran [`offline-log-collector`](./offline-log-collector/README.md) already, you can [click here to start transforming your tablestats/cfstats into a formatted spreadsheet using TableAnalyzer](./TableAnalyzer/README.md#generate-spreadsheet). Note that at this point, we have already ran the `cfstats.receive.py` script for you. Now all you will have to do is transform it into a CSV and then convert that into a spreadsheet, following instructions in the link above.
-
-Alternatively, you can also just run TableAnalyzer's `cfstats.receive.py` script yourself which will accomplish the same thing. [Click here if you want to go down that route instead](./TableAnalyzer/README.md).
