@@ -1,8 +1,8 @@
 cluster_settings:
-  path_to_logs: 
+  paths_to_logs: 
     # list all paths to logs that you use in this cluster. A path specified below should match a node's log directory at least once
     - /var/log/cassandra
-  path_to_configs: 
+  paths_to_configs: 
     # list all paths to configs that you use in this cluster. A path specified below should match a node's log directory at least once
     - /etc/dse/cassandra/
 

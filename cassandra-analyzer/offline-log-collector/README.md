@@ -7,18 +7,27 @@ This tool also executes commands from TableAnalyzer and NodeAnalyzer. Note thoug
 
 ### Table of Contents
 - [Step #1: Setup](#Step-1-setup)
-    - [Step #1.1: Prerequisites](#Step-11-prerequisites)
+    - [Step #1.0: Prerequisites](#Step-10-prerequisites)
+    - [Step #1.1: Install Requirements](#Step-11-install-requirements)
     - [Step #1.2: Configuration](#Step-12-configuration)
         - [Step #1.2.1: Create a `config/environments.yaml` File](#Step-121-Create-a-configenvironmentsyaml-File)
         - [Step #1.2.2: Create a `config/settings.yaml` File](#Step-122-Create-a-configsettingsyaml-File)
 - [Step #2: Run it](#Step-2-run-it)
 - [Testing](#testing)
-- [TODOs](#todos)
+- [TODOs/Project Backlog](#todosproject-backlog)
 
 # Step #1: Setup
-## Step #1.1: Prerequisites
+## Step #1.0: Prerequisites
 - Requires python3 and pip3
 -  Currently also requires `nodetool` to be callable from the commandline on the node(s) that logs are collected from.
+
+## Step #1.1: Install Requirements
+You will need to install requirements for both offline-log-collector and TableAnalyzer.
+
+```
+pip3 install -r requirements.txt
+pip3 install -r TableAnalyzer/requirements.txt
+```
 
 ## Step #1.2: Configuration
 ### Step #1.2.1: Create a `config/environments.yaml` File
@@ -32,7 +41,9 @@ This tool also executes commands from TableAnalyzer and NodeAnalyzer. Note thoug
     ```
 
 #### SSH support (TODO)
-Running collect_logs.ph using SSH is currently not supported, though it is on our to-do list. In the meantime, you can run the script within separate nodes and combine using the [instructions for combining tarballs](#combining-tarballs) below.
+For now, running `collect_logs.py` using SSH is currently not supported. If you need SSH support, you can use NodeAnalyzer or TableAnalyzer, but not by using collect_logs.py.
+
+However, SSH support it is on our to-do list and we hope to add it is soon. In the meantime, you can run the script within separate nodes and combine using the [instructions for combining tarballs](#combining-tarballs) below.
 
 #### Combining tarballs
 Sometimes it is necessary to combine several tarballs together, in particular when you want to run `offline-log-collector` on multiple nodes and combine them together.
@@ -76,49 +87,40 @@ Then, change what you need to in the `settings.yaml` file. Here are the descript
     - `JMX_PORT`: jmx port used by this node.
 
 # Step #2: Run it
+- Determine what args you need to set according to the [chart below](#execution-options).
 - Then just run this:
 ```
   pip3 install -r requirements.txt
   python3 collect_logs.py <client_name>
 ```
 
-You should now have a tarball in `cassandra-analyzer/offline-log-ingester/log-tarballs-to-ingest/<client_name>_<timestamp>.tar.gz`.
+You should now have a tarball in `cassandra-analyzer/offline-log-ingester/log-tarballs-to-ingest/<client_name>_<timestamp>.tar.gz`. (Unless of course you specify a different tarball name in the options).
+
+TableAnalyzer will also create a file in `data/<region>/<environment>/` for each node, called "<ip_addr>.txt" (e.g., 1.2.3.4.txt).
+
+### Execution Options
+In case you need to set some options, several arguments are available to you.
+
+| Argument | Description | Default | Example |
+| -------- | ----------- | ------- | ------- |
+| `--tarball-filename` | The name that you want for the generated archive file. | `<client_name>_<timestamp>.tar.gz` | `python3 collect_logs.py <client_name> --tarball-filename custom-tarball-name.tar.gz` |
+| `--cleanup-on-finish` | If the python script runs successfully, clears out all generated files that were created except for the new tarball. | `False` | `python3 collect_logs.py <client_name> --cleanup-on-finish` |
+| `--settings-file` | Path to settings file | `cassandra-analyzer/offline-log-ingester/config/settings.yaml` | `python3 collect_logs.py <client_name> --settings-file ./custom-path/to/settings.yaml` |
+| `--environment-file` | Path to environment yaml file | `cassandra-analyzer/offline-log-ingester/config/environments.yaml` | `python3 collect_logs.py <client_name> --settings-file ./custom-path/to/environments.yaml` |
+| `--skip-table-analyzer` | If set, will not run TableAnalyzer | `False` | `python3 collect_logs.py <client_name> --skip-table-analyzer` |
+| `--skip-node-analyzer` | If set, will not run NodeAnalyzer | `False` | `python3 collect_logs.py <client_name> --skip-node-analyzer` |
 
 ### What's next
-Now that you have a tarball with your node's `cfstats`/`tablestats` and your Cassandra log files, you are now ready to either ingest your log files into Elasticsearch/Kibana and generating a spreadsheet using TableAnalyzer. 
+Now that you have a tarball with your node's logs, as well as `cfstats`/`tablestats` output, you are ready to ingest your log files into Elasticsearch/Kibana and generate a spreadsheet using TableAnalyzer. 
 
 - [Click here to start ingesting your log files into Elasticsearch/Kibana](../offline-log-ingester/README.md)
 - [Click here to start transforming your nodetool output into a formatted spreadsheet using TableAnalyzer](./TableAnalyzer/README.md#generate-spreadsheet)
   - Note that at this point, we have already ran the `cfstats.receive.py` script for you. Now all you will have to do is transform it into a CSV and then convert that into a spreadsheet, following instructions in the link above.
 
-# Testing
-NOTE These are not unit tests per se, but just wrapper around the actual script that sets up a test env first. 
+  # Testing
+  [For instructions on testing, see notes here](./test/README.md)
 
-This will generate a tarball for you that you can then ingest using the `offline-log-ingester` test script.
 
-### Setup Tests
-- Requires python3 and pip3
-- Make sure no other cassandra instance is running on your localhost (or else ccm will conflict with those ports, e.g., `OSError: [Errno 98] Address already in use`)
-
-### Run Tests
-Then just run this:
-```
-  pip3 install -r requirements.txt
-  pip3 install -r test/requirements.txt
-  cd test
-  python3 collect_logs_test.py
-```
-
-### Debugging Tests
-- If you get error `File exists: '$HOME/.ccm/test_cluster'`: 
-    The test did not clean up correctly from last time (`test_cluster` is the name of the cluster we use for testing with ccm). The test script might have already removed the `test_cluster` for you, and you can just run the test again and it should work. If not though, and **ASSUMING YOU DON'T NEED THAT CLUSTER ANYMORE:** Remove the old cluster so you can run test again: 
-    ```
-    ccm test_client remove
-
-    # now run the test again
-    python3 collect_logs_test.py
-    ```
-
-# TODOs
+# TODOs/Project Backlog
 - SSH Support, for remote execution on multiple nodes at once.
 - Unit tests
