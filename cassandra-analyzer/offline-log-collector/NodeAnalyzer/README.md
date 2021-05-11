@@ -33,9 +33,8 @@ Here's a summary of the differences:
 | Support for specifying jmx port | Not supported. Just uses default port used by nodetool. | Supported by env var `NODE_ANALYZER_SKIP_ARCHIVING`. If left blank, nodetool default is used. If specified, sent to nodetool using `-p` arg. |  
 | Support for specifying command for nodetool | Not supported. Just uses `nodetool`. | Supported by env var `NODE_ANALYZER_NODETOOL_CMD`. Defaults to `nodetool`. Useful if you're using DSE or Apache C* tarball installation, or ccm |  
 | Copy linux system logs | Does not copy linux system logs | Tries to copy linux system logs, but if it doesn't find the log continues without throwing an error. Looks in all paths specified in `NodeAnalyzer/nodetool.linux-log-paths.txt` |  
-| Run without root priveleges | Does not require root priveleges | Requires root priveleges since it copies the linux system logs |  
+| Run without root privileges | Does not require root privileges | Requires root privileges since it copies the linux system logs |  
 | Generate directories for you | User is required to make the data dir and subdirs themselves. | Makes the directories for you wherever the `data` dir was set using the third arg. |  
-
 
 ## Examples:
 
