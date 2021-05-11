@@ -3,9 +3,10 @@ Listed below are some common errors you might run into while running offling-log
 
 Table of Contents
 - [General Debugging Techniques](#General-Debugging-Techniques)
-- [Elasticsearch related errors](#Elasticsearch-related-errors)
-- [Filebeat related errors](#Filebeat-related-errors)
-- [Other Errors](#Other-Errors)
+- [Elasticsearch related issues](#Elasticsearch-related-issues)
+- [Filebeat related issues](#Filebeat-related-issues)
+- [Kibana related issues](#Kibana-related-issues)
+- [Other Issues](#Other-Issues)
 
 # General Debugging Techniques
 Here are some tricks and tips you might try in general, that might be able to help you find out what the issue is for a number of errors you run into.
@@ -37,7 +38,7 @@ Sometimes when you are debugging, you want to just debug the generated filebeat.
 
 Note however that if you run offline-log-ingester again, it will generate a new write filebeat.yml file and any changes you make will be overwritten by the newly generated file. You can move your filebeat.yml to somewhere else to get around this. 
 
-See [instructions here](./README.md#want-to-add-some-logs-and-run-script-again-with-the-same-config) for running the generated yml again.
+See [instructions here](./README.md#want-to-run-the-script-again-with-the-same-config) for running the generated yml again.
 
 ## Debugging your filebeat installation
 ### Try `sudo filebeat setup`
@@ -51,7 +52,22 @@ If you want to setup filebeat using a different filebeat.yml file, you can use t
 sudo filebeat setup --c cassandra.vision/cassandra-analyzer/offline-log-ingester/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yaml
 ```
 
-# Elasticsearch Related Errors
+## Helpful Elasticsearch queries to debug
+### Check if Filebeat created an index in Elasticsearch
+This is helpful for making sure filebeat is correctly ingesting into elasticsearch.
+Assuming elasticsearch is running at `localhost`:
+```
+curl localhost:9200/_cat/indices/filebeat-*
+```
+
+If filebeat created an index, you should see something like this:
+
+```
+=> curl localhost:9200/_cat/indices/filebeat-*
+yellow open filebeat-7.12.1-2021.05.11-000001 pnU1SQrlSgu0diglKmOtYQ 1 1 15124 0 4.1mb 4.1mb
+```
+
+# Elasticsearch Related Issues
 
 ## Error: ConnectionError(('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
 Your elasticsearch or kibana hosts might need to be set if you get an error that looks like the following after running the script:
@@ -83,7 +99,7 @@ self.es.indices.delete(index='filebeat-*')
 Solution: 
 ES Python client isn't connecting to elasticsearch. You probably need to set the --es-hosts flag to something else.
 
-# Filebeat related errors
+# Filebeat related Issues
 ## ERROR: sudo: filebeat: command not found
 E.g., if when running offline-log-ingester you see something like this:
 
@@ -96,7 +112,10 @@ sudo: filebeat: command not found
 ### Solution
 You need to have filebeat installed on your system and accessible from your path. [Follow instructions here](./README.md#step-10-prerequisites).
 
-# Other Errors
+# Kibana related issues
+
+
+# Other Issues
 ## ERROR: `FileNotFoundError: <...>/nodes/nodes`
 E.g., 
 ```

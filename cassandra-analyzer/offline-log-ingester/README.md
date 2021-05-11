@@ -13,6 +13,10 @@ Table of Contents:
     - [Step 1.2: Position your tarball](#Step-12-Position-your-tarball)
 - [Step 2: Determine the arguments you will use](#Step-2-Determine-the-arguments-you-will-use)
 - [Step 3: Execute the python script](#Step-3-Execute-the-python-script)
+- [Step 4: View the Logs in Kibana](#Step-4-View-the-Logs-in-Kibana)
+    - [Option A: Import our Dashboard](#Option-A-Import-our-Dashboard)
+    - [Option B: Add an Index Pattern for Filebeat](#Option-B-Add-an-index-Pattern-for-filebeat)
+- [Step 5: What's next](#Step-5-Whats-next)
 - [Debugging](#debugging)
 - [Testing](#testing)
 - [Development](#development)
@@ -132,6 +136,11 @@ E.g.,
 --custom-config setup.kibana.host 123.456.345.123:5601
 ```
 
+Note: this arg can be used multiple times to set multiple values. For example:
+    ```
+    --custom-config setup.kibana.host 123.456.345.123:5601 --custom-config some.other.key my-value
+    ```
+
 ### Cleanup generated files (optional)
 To cleanup all generated files if the script run successfully, pass in:
 ```
@@ -142,6 +151,13 @@ If set, removes the directory found for the "client name" you passed in. E.g., i
 
 ```
 rm -rf cassandra-analyzer/offline-log-ingester/logs-for-client/test_client/
+```
+
+If it worked, you should see this output at the end of the ingestion run:
+
+```
+=== Cleaning up ===
+Cleanup Successful.
 ```
 
 ### Ignore zeros in tarball (optional)
@@ -168,7 +184,10 @@ python3 ingest_tarball.py my-client-logs-tarball.tar.gz my_client
 
 At this point, filebeat will start running and you should be able to start seeing logs in Kibana. 
 
-When Filebeat stops detecting any changes, you can close it using `ctrl+c`. You will know it's done when the STDOUT slows down, and you see a lot of logs that say things like:
+When Filebeat has finished ingesting all of the log files, you can close it using `ctrl+c`. 
+
+### How you know when it's finished
+You will know it's done when the STDOUT slows down, and you see a lot of logs that say things like:
 
 - `Stopping harvester for file`
 - `harvester cleanup finished for file`
@@ -195,31 +214,96 @@ Now you can head over to Kibana and start your log analysis! To import our Kiban
 
 <br/>
 
-### What's next
+# Step 4: View the Logs in Kibana
+
+If you followed all the instructions up to this point, your logs should be ingested into Elasticsearch, and Kibana should be up and running at port 5601. 
+
+However, unless you have setup Kibana before, there is still some configuration that needs to be done for Kibana to display your logs. 
+
+## Option A: Import our Dashboard
+
+This is by far the recommended way to get started. Simply [follow our instructions here](../kibana-dashboard/README.md), and it will both setup Kibana to visualize your filebeat indexes as well as provide a default dashboard to get you started. 
+
+[Click here to get started](../kibana-dashboard/README.md).
+
+## Option B: Add an Index Pattern for Filebeat
+
+For better or for worse, the Kibana GUI changes from time to time. But the general process should be roughly the same regardless of the version of Kibana you are using. 
+
+>    **Protip:** Having trouble finding this button? Try navigating using the url instead: `http://<kibana-host>:5601/app/management/kibana/indexPatterns/create`. 
+> 
+> E.g., if kibana is running on localhost: `http://localhost:5601/app/management/kibana/indexPatterns/create`.
+> 
+> Now you can skip to [Step 4.B.5](#step-4B5-Add-filebeat--as-index-pattern) below!
+
+### Step 4.B.1: Click the hamburger icon to open the menu
+![screenshot](docs/assets/kibana.home.hamburger.png)
+
+### Step 4.B.2: Scroll down and on the left-hand side, under "Management", click on "Stack Management"
+![screenshot](docs/assets/kibana.home.stack-management-btn.png)
+
+### Step 4.B.3: Scroll down and on the left-hand side, under "Kibana", click on "Index Patterns"
+![screenshot](docs/assets/kibana.management.index-patterns-btn.png)
+
+### Step 4.B.4: Click "Create Index Pattern" Button
+![screenshot](docs/assets/kibana.management.index-patterns.create-btn.png)
+
+### Step 4.B.5: Add filebeat-* as index pattern
+Fill in `filebeat-*` Then click "Next step >" to continue.
+
+![screenshot](docs/assets/kibana.management.index-patterns.create.define-pattern.png)
+
+You should see that it matches the indexes filebeat has created already, as it does in the picture above (ie where it says "Your index pattern matches 2 sources.")
+
+### Step 4.B.6: Set time field to @timestamp
+Set time field to `@timestamp` then click "Create index pattern" button.
+![screenshot](docs/assets/kibana.management.index-patterns.create.set-time-field.png)
+
+Now you should be ready to start viewing your logs in Kibana!
+
+### Step 4.B.7: View your logs, and create your own visualizations
+You are finally ready to look at your logs in Kibana. 
+
+Navigate over to the "Discover" view (found in the hamburger menu, or at `http://<kibana-host>:5601/app/discover`), and start exploring. 
+
+Note that you will probably have to expand the time filter to include more than the "Last 15 minutes", given that this is offline log analysis and the logs are likely going to be from before 15 minutes ago.
 
 For more information on using the ELK stack to do Cassandra log analysis, check out the resources below:
 - https://blog.anant.us/cassandra-lunch-14-basic-log-diagnostics-with-elk-fek-bek/
 - https://blog.pythian.com/cassandra-open-source-log-analysis-kibana-using-filebeat-modeled-docker/
 
+Also keep in mind, it's still not too late to import our pre-built dashboard for your use! [Click here to import our dashboard](../kibana-dashboard/README.md).
+
+# Step 5: What's next
+
+At this point, you have some different options about what you want to do next. Here are some ideas for you to consider:
+
+### Generate a spreadsheet using TableAnalyzer
+
 You might also want to perform a data model review using TableAnalyzer, if you haven't already. 
-- If you created the log tarball using our `offline-log-collector` you can start generating a speadsheet by [clicking here and following the instructions provided](./TableAnalyzer/README.md#generate-spreadsheet). Note that at this point, we have already ran the `cfstats.receive.py` script for you. Now all you will have to do is transform it into a CSV and then convert that into a spreadsheet, following instructions in the link above.
+- If you created the log tarball using our `offline-log-collector` you can start generating a spreadsheet by [clicking here and following the instructions provided](./TableAnalyzer/README.md#generate-spreadsheet). Note that at this point, we have already ran the `cfstats.receive.py` script for you. Now all you will have to do is transform it into a CSV and then convert that into a spreadsheet, following instructions in the link above.
 - If you are using the diagnostic tarball generated by Datastax Opscenter, you will have to run TableAnalyzer from the beginning. [Click here to get started](./TableAnalyzer/README.md)
 
+### Want to run the script again with the same config?
+Sometimes you will want to run file be again without having to run the whole python script from the start. Use cases include when you manually make some changes to the generated filebeat.yaml file, or if you manually add some log files that you want ingested into Kibana, but you don't want to have to run the whole thing again. 
 
+You can do this easily by using the `--c ` flag when calling filebeat. 
 
-### Want to add some logs and run script again with the same config?
 1) Add log files to the directory where similar logs are located: 
     `<base_filepath_for_logs>/<hostname>/<type>`.
 
     e.g., `nodes/12.34.56.89/spark/worker/worker.log` 
 
+    This is of course only if you want to add more logs.
+
 2) Run filebeat again:
 
-Replace the client_name and incident_id below and run it again
-```
-sudo filebeat -e -d "*" --c cassandra.vision/cassandra-analyzer/offline-log-ingester/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yaml
-```
+    Use the `{client_name}` and `{incident_id}` from the previous ingestion and run it again
+    ```
+    sudo filebeat -e -d "*" --c cassandra.vision/cassandra-analyzer/offline-log-ingester/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yaml
+    ```
 
+Notes:
 - filebeat.yaml will be at: cassandra.vision/cassandra-analyzer/offline-log-ingester/logs-for-client/{client_name}/incident-{incident_id}/tmp/filebeat.yml
 - Alternatively, if filebeat is still running (and is using the filebeat.yaml created by this script), you can just add the separate log files and it will find and ingest them. 
 
