@@ -26,8 +26,6 @@ Table of Contents
     + [Export Using API](#export-using-api)
   * [TODOs](#todos)
 
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
 
 # Overview 
 This Kibana dashboard provides several standard KQL/Lucene queries ready to go, some timelion charts, log counts etc, so that all the user has to do is import the kibana dashboard config from our repo. 
