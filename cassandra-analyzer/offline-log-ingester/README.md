@@ -149,6 +149,7 @@ Notes:
 - all log files can either end in `.log` as above, or `.log*`. Often this looks something like `gc.log.0` or `gc.log.3.current`. All that end in `.log*` will be ingested. 
 
 # Debugging
+[Click here for help debugging offline-log-ingester](./ingestion.debugging.md).
 
 # Testing
 [Click here for instructions for integration testing](./test/README.md).
