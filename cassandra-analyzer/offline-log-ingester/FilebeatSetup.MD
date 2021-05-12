@@ -1,4 +1,4 @@
-# THIS IS A WORK IN PROGRESS 
+# NOTE: THIS IS A WORK IN PROGRESS! 
 This is a reference for information about using Filebeat to ingest offline logs from Cassandra into Elasticsearch/Kibana. 
 
 Note however that this is an older document, and the notes in other documentation is more up to date. **Much of what we do in cassandra.vision now no longer follows what is described in this document.** However, this document is kept here for reference.
