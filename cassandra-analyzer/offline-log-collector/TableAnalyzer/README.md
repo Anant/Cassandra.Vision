@@ -1,6 +1,6 @@
 # cassandra.toolkit/TableAnalyzer
 
-Table of Contents:
+### Table of Contents:
 * [Introduction](#introduction)
   + [TableAnalyzer Among Other Cassandra Tools](#tableanalyzer-among-other-cassandra-tools)
   + [Purpose](#purpose)
