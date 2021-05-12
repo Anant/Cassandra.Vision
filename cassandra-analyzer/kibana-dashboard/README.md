@@ -54,12 +54,11 @@ The easiest way is to use the [Import Saved objects API](https://www.elastic.co/
 
 You can easily adjust the bash script to use your kibana host if kibana is not running on `localhost`.
 
-After importing the dashboard, you should get a response that looks something like this:
+After importing the dashboard, you should get a response that looks something like this (note that output below is truncated):
 ```
 => ./scripts/import-dashboard.sh
 {"successCount":13,"success":true,"warnings":[],"successResults":[{"type":"index-pattern","id":"filebeat-*","meta":{"title":"filebeat-*","icon":"indexPatternApp"}},{"type":"visualization",...}}
 ```
-(truncated)
 
 Now you're reading to go! [Click here for instructions on how to use the pre-defined visualizations](#Interpreting-the-pre-defined-visualizations)
 

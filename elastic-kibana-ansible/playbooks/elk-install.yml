@@ -95,10 +95,12 @@
         state: restarted
         enabled: yes
 
-    - name: install logstash
-      debug:
-        msg: install logstasj
+    #  NOTE logstash and filebeat are not currently getting installed. Perhaps will add later. 
+    # Currently we're not using logstash in our stack, so not adding for now though
+    # - name: install logstash
+    #   debug:
+    #     msg: install logstasj
 
-    - name: install filebeat
-      debug:
-        msg: install filebeat
+    # - name: install filebeat
+    #   debug:
+    #     msg: install filebeat

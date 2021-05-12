@@ -37,8 +37,6 @@ ansible-playbook -i ./envs/elk/hosts.ini ./playbooks/hello.yml
 The next command installs:
 - install elasticsearch
 - install kibana
-- *install logstash (TODO not yet configured)*
-- *install filebeat (TODO not yet configured)*
 
 ```
 ansible-playbook -i ./envs/elk/hosts.ini ./playbooks/elk-install.yml
@@ -47,7 +45,7 @@ ansible-playbook -i ./envs/elk/hosts.ini ./playbooks/elk-install.yml
 Elasticsearch should now be running at port 9200, and connected to kibana running at port 5601. 
 
 ### What about Filebeat and Logstash?
-Currently, we are not installing logstash and filebeat, since logstash is not needed for cassandra.vision and filebeat is often installed on a separate host than elasticsearch and kibana, so for now we are keeping it separate. 
+Currently, we are not installing logstash and filebeat. We might never add logstash, since logstash is not needed for cassandra.vision. We might add filebeat later however.
 
 You can find instructions for installing filebeat at [the official filebeat documentation](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation-configuration.html).
 
@@ -90,7 +88,6 @@ Check out the elasticsearch logs, and debug accordingly.
 tail -f /var/log/elasticsearch/elasticsearch.log
 ```
 
-
 # Development
 TODO add instructions for developing and contributing to elastic-kibana-ansible.
 
@@ -99,6 +96,8 @@ TODO add instructions for developing and contributing to elastic-kibana-ansible.
 - playbook for redhat
 - Redhat on ansible
 - make hosts.ini in the repo just an example file that users copy and use, so changes don't get accidentally committed to repo.
+- install logstash? We're currently not using in our stack however, so might not bother. 
+- install filebeat
 
 #### Reference for Redhat Installation
 
