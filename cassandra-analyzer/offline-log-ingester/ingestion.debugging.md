@@ -114,7 +114,7 @@ You need to have filebeat installed on your system and accessible from your path
 
 # Kibana related issues
 ## No Data is Showing Up in Kibana
-If you see your log data in Elasticsearch (which you can determine several ways, including using [Elasticsearch's REST API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html)) then you probably have one of two problems:
+If there's no data visible in Kibana but you see your log data in Elasticsearch (which you can determine several ways, including using [Elasticsearch's REST API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html)) then you probably have one of two problems:
 
 1) Kibana is not connected to Elasticsearch correctly
     - If you used our ansible playbook, it should be setup correctly already. 
