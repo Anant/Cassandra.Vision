@@ -38,7 +38,7 @@ If you haven't already, install kibana, filebeat etc, and ingest logs into Kiban
 ## Import the Dashboard
 Find the file for the export that you want. 
 
-Latest version is currently [`./exported-objects/export-v1.1.ndjson`](`./exported-objects/export-v1.1.ndjson`).
+Latest version is currently [`./exported-objects/export-v1.1.ndjson`](./exported-objects/export-v1.1.ndjson).
 
 Then you import it, using either the Kibana GUI or the Elasticsearch REST API. 
 
