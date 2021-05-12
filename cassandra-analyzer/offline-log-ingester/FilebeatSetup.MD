@@ -1,4 +1,8 @@
 # THIS IS A WORK IN PROGRESS 
+This is a reference for information about using Filebeat to ingest offline logs from Cassandra into Elasticsearch/Kibana. 
+
+Note however that this is an older document, and the notes in other documentation is more up to date. **Much of what we do in cassandra.vision now no longer follows what is described in this document.** However, this document is kept here for reference.
+
 # How to Analyze on offline BEK (Beats/Filebeat ElasticSearch Kibana) Setup
 
 When you get a dump of the logs after unzipping all of the gc and log files, use this filebeat template to ingest the logs using a parser that is specialized

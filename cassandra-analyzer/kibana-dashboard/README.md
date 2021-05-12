@@ -1,7 +1,7 @@
 # Kibana Dashboard
 An importable kibana dashboard to use that's compatible with our filebeat setup. Built in Kibana 7.8 but should be compatible with other versions too, especially 7.x versions.
 
-Table of Contents
+### Table of Contents
 - [Overview](#Overview)
 - [Setup](#setup)
   * [Import the Dashboard](#import-the-dashboard)
