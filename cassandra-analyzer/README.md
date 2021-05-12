@@ -33,14 +33,14 @@ Now you are ready to visualize data about your cluster.
 
 There are two different types of visualization here that will help you perform offline monitoring: 1) log visualization using Kibana and 2) `tablestats`/`cfstats` visualization in a formatted spreadsheet. 
 
-It's best if you have time to do both, but they can be done separately as well.
+It's best to do both if you can, but they can be done separately as well.
 
-### Log visualization into Kibana
+### Log visualization using Kibana
 Now that you have either finished collecting logs using `offline-log-collector` or you already have a Datastax Opscenter Diagnostic Tarball, you are ready to begin ingesting logs into Elasticsearch and visualizing in Kibana. 
 
-See [`./offline-log-ingester`](./offline-log-ingester/README.md) for ingesting logs into Elasticsearch and Kibana.
+See [offline-log-ingester](./offline-log-ingester/README.md) for ingesting logs into Elasticsearch and Kibana.
 
-### `tablestats`/`cfstats` Visualization in a Formatted Spreadsheet
-A formatted spreadsheet can make it easy to run a data model review on your cluster. Follow the steps below to begin.
+### `tablestats`/`cfstats` Visualization using a Formatted Spreadsheet
+A formatted spreadsheet containing tablestats info can make it easy to run a data model review on your cluster. Follow the steps below to begin.
 
-If you ran [`offline-log-collector`](./offline-log-collector/README.md) already, you can [click here to start transforming your tablestats/cfstats into a formatted spreadsheet using TableAnalyzer](./offline-log-collector/TableAnalyzer/README.md#step-3-generate-spreadsheet). Note that at this point, we have already ran the `cfstats.receive.py` script for you. Now all you will have to do is transform it into a CSV and then convert that into a spreadsheet, following instructions in the link above.
+If you ran [offline-log-collector](./offline-log-collector/README.md) already, you can [click here to start transforming your tablestats/cfstats into a formatted spreadsheet using TableAnalyzer](./offline-log-collector/TableAnalyzer/README.md#step-3-generate-spreadsheet). Note that at this point, we have already ran the `cfstats.receive.py` script for you. Now all you will have to do is transform it into a CSV and then convert that into a spreadsheet, following instructions in the link above.

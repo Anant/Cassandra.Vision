@@ -98,6 +98,7 @@ TODO add instructions for developing and contributing to elastic-kibana-ansible.
 - run elasticsearch with docker
 - playbook for redhat
 - Redhat on ansible
+- make hosts.ini in the repo just an example file that users copy and use, so changes don't get accidentally committed to repo.
 
 #### Reference for Redhat Installation
 
