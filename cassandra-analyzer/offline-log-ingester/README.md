@@ -159,7 +159,7 @@ Cleanup Successful.
 ```
 
 ### Ignore zeros in tarball (optional)
-If you are using a combined tarball, you will want to ignore zeros in the tarball. See [here](https://www.gnu.org/software/tar/manual/html_node/Ignore-Zeros.html) for what we are doing. 
+If you are using a combined tarball, you will want to ignore zeros in the tarball. See [here](https://www.gnu.org/software/tar/manual/html_node/Ignore-Zeros.html) for how this works. 
 
 ```
 --ignore-zeros 

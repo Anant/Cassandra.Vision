@@ -1,7 +1,7 @@
 # Ingestion - Debugging
 Listed below are some common errors you might run into while running offling-log-ingester, as well as potential solutions. 
 
-Table of Contents
+### Table of Contents
 - [General Debugging Techniques](#General-Debugging-Techniques)
 - [Elasticsearch related issues](#Elasticsearch-related-issues)
 - [Filebeat related issues](#Filebeat-related-issues)
@@ -69,7 +69,7 @@ yellow open filebeat-7.12.1-2021.05.11-000001 pnU1SQrlSgu0diglKmOtYQ 1 1 15124 0
 
 # Elasticsearch Related Issues
 
-## Error: ConnectionError(('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
+## ERROR: `ConnectionError(('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))`
 Your elasticsearch or kibana hosts might need to be set if you get an error that looks like the following after running the script:
 ```
 elasticsearch.exceptions.ConnectionError: ConnectionError(('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))) caused by: ProtocolError(('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
@@ -113,6 +113,18 @@ sudo: filebeat: command not found
 You need to have filebeat installed on your system and accessible from your path. [Follow instructions here](./README.md#step-10-prerequisites).
 
 # Kibana related issues
+## No Data is Showing Up in Kibana
+If you see your log data in Elasticsearch (which you can determine several ways, including using [Elasticsearch's REST API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html)) then you probably have one of two problems:
+
+1) Kibana is not connected to Elasticsearch correctly
+    - If you used our ansible playbook, it should be setup correctly already. 
+    - If not, you can [see the settings which are available for Kibana here](https://www.elastic.co/guide/en/kibana/current/settings.html). For example, you might need to change `elasticsearch.hosts` in your `kibana.yml`.
+2) Kibana is connected, but you need to setup your index pattern in Kibana first. 
+    - You can determine if this is the issue by creating an index pattern, either manually or by importing our dashboard. [Click here for instructions](./README.md#Step-4-View-the-Logs-in-Kibana).
+
+
+Further reading: 
+- https://www.digitalocean.com/community/tutorials/how-to-troubleshoot-common-elk-stack-issues
 
 
 # Other Issues
@@ -156,7 +168,7 @@ The tarball is missing the `<archived-dir>/`, so our script thinks that `nodes` 
     - Obviously less than ideal.
 
 
-## ERROR: failed to open store 'filebeat': open /var/lib/filebeat/registry/filebeat/meta.json: no such file or directory
+## ERROR: `failed to open store 'filebeat': open /var/lib/filebeat/registry/filebeat/meta.json: no such file or directory`
 ### Diagnosis
 This seems to be because newer versions of ES/filebeat (e.g., 7.9.x) have different behavior, and to clear out the registry you actually need to remove the whole `/var/lib/filebeat/registry`, not just the subdirectory `/var/lib/filebeat/registry/filebeat`, which worked before. 
 
