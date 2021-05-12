@@ -2,16 +2,16 @@
 Instructions for contributing to cassandra.vision is a work in progress. For the instructions that we do have, (or at least where we plan to put them once we write them) see links below.
 
 ## Development for offline-log-collector
-[See here for instructions to add to offline-log-collector](../cassandra-analyzer/offline-log-collector/README.md#development).
+[See here for contribution instructions for offline-log-collector](../cassandra-analyzer/offline-log-collector/README.md#development).
 
 ## Development for offline-log-ingester
-[See here for instructions to add to offline-log-ingester](../cassandra-analyzer/offline-log-ingester/README.md#development).
+[See here for contribution instructions for offline-log-ingester](../cassandra-analyzer/offline-log-ingester/README.md#development).
 
 ## Development for kibana-dashboard
-[See here for instructions to add to kibana-dashboard](../cassandra-analyzer/kibana-dashboard/README.md#development).
+[See here for contribution instructions for kibana-dashboard](../cassandra-analyzer/kibana-dashboard/README.md#development).
 
 ## Development for elastic-kibana-ansible
-[See here for instructions to add to elastic-kibana-ansible](../elastic-kibana-ansible/README.md#development).
+[See here for contribution instructions for elastic-kibana-ansible](../elastic-kibana-ansible/README.md#development).
 
 # TODOs
 This is for TODOs unrelated to any specific project. For individual projects TODO items, see individual notes on each separate project
