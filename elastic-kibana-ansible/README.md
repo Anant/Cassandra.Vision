@@ -1,7 +1,7 @@
 # Installing Filebeat, Elasticsearch & Kibana for Log analysis
 If you don't have Filebeat, Elasticsearch & Kibana installed on your machine already, you can use our Ansible playbook to do it for you.
 
-Table of Contents
+### Table of Contents
 - [Setup your hosts.ini file](#Setup-your-hostsini-file)
     - [Running on localhost?](#Running-on-localhost)
     - [Test connection](#Test-connection)
