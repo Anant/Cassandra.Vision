@@ -25,6 +25,7 @@ An importable kibana dashboard to use that's compatible with our filebeat setup.
     + [Export Using Kibana GUI](#export-using-kibana-gui)
     + [Export Using API](#export-using-api)
   * [TODOs](#todos)
+- [Debugging](#debugging)  
 
 
 # Overview 
@@ -170,3 +171,10 @@ https://www.elastic.co/guide/en/kibana/7.8/saved-objects-api-export.html#ssaved-
 
 ## TODOs
 - add scripts to take advantage of the export/import saved objects api, to make importing even easier
+
+# Debugging
+## Dashboard import does not work due to conflict
+E.g., if you import the dashboard using REST API, our bash script (`./scripts/import-dashboard.sh`) or through the GUI, and it says there is a conflict, and you see something like this in the response:
+![image](https://user-images.githubusercontent.com/22231483/172807247-dc6dd793-f8bc-49a1-b148-e1c98e6e82a6.png)
+
+`Conflict` here means something with the same id already exists. You can either just ignore the error message and see if it works (note that other items still import), or if too much didn't import and something broke, remove the "Index Patterns" and the "Saved Objects" (either using REST API or Kibana GUI) and import again. 
