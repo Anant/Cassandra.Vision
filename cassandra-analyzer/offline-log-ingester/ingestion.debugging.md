@@ -100,6 +100,24 @@ Solution:
 ES Python client isn't connecting to elasticsearch. You probably need to set the --es-hosts flag to something else.
 
 # Filebeat related Issues
+## ERROR: data path already locked by another beat. 
+E.g., if when running offline-log-ingester you see something like this:
+```
+2022-06-09T15:27:17.387+0700    ERROR   instance/beat.go:971    Exiting: data path already locked by another beat. Please make sure that multiple beats are
+not sharing the same data path (path.data).
+Exiting: data path already locked by another beat. Please make sure that multiple beats are not sharing the same data path (path.data).
+```
+
+It probably means filebeat is already running, and needs to be stopped. [This StackOverflow post](https://stackoverflow.com/questions/65561985/filebeat-data-path-already-locked-by-another-beat-please-make-sure-that-multi) provides more information. 
+
+It can be stopped by running:
+```
+sudo systemctl stop filebeat
+```
+
+If not, you might need to see if you have a `filebeat.lock` file that accidentally never got removed (e.g., at `/var/lib/filebeat/filebeat.lock`). If so, try removing that and try again (NOTE be careful doing this, if you don't know what you're doing! Make sure filebeat isn't running already first!).
+
+
 ## ERROR: sudo: filebeat: command not found
 E.g., if when running offline-log-ingester you see something like this:
 
