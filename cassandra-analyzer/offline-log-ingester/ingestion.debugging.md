@@ -131,6 +131,8 @@ sudo: filebeat: command not found
 You need to have filebeat installed on your system and accessible from your path. [Follow instructions here](./README.md#step-10-prerequisites).
 
 # Kibana related issues
+NOTE besides issues below, also see [Kibana ingestion guide](../kibana-dashboard/README.md#debugging) especially for help debugging dashboard import issues.
+
 ## No Data is Showing Up in Kibana
 If there's no data visible in Kibana but you see your log data in Elasticsearch (which you can determine several ways, including using [Elasticsearch's REST API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html)) then you probably have one of two problems:
 
