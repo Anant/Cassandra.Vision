@@ -33,7 +33,7 @@ pip3 install -r TableAnalyzer/requirements.txt
 ## Step #1.2: Configuration
 ### Step #1.2.1: Create a `config/environments.yaml` File
 
-The `environments.yaml` file follows same format as environments.yaml for TableAnalyzer. [Click here for instructions on how to setup environments.yaml](./TableAnalyzer/README.md). 
+The `environments.yaml` file follows same format as environments.yaml for TableAnalyzer. [Click here for instructions on how to setup environments.yaml](./TableAnalyzer/README.md#set-configuration-create-environmentsyaml-file). 
 
 ```
 cp config-templates/environments-sample.yaml config/environments.yaml
