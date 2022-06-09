@@ -1,5 +1,5 @@
 # Ingestion - Debugging
-Listed below are some common errors you might run into while running offling-log-ingester, as well as potential solutions. 
+Listed below are some common errors you might run into while running [offline-log-ingester](./README.md), as well as potential solutions. 
 
 ### Table of Contents
 - [General Debugging Techniques](#General-Debugging-Techniques)
