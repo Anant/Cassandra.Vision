@@ -1,4 +1,6 @@
 # Offline Log Collection for Cassandra
+![](https://github.com/Anant/cassandra.vision/raw/master/docs/assets/diagrams/cassandra.vision.architecture-offline-log-collector.png)
+
 Offline Log Analysis begins with offline log collection. That is what this tool is for.
 
 Note that in general, if you are using DSE, you will probably just want to use the Datastax opscenter diagnostic tarball instead. However, if you are using open source Apache Cassandra, you can use this tool instead.
