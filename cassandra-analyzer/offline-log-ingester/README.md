@@ -1,4 +1,6 @@
 # Ingest Tarball of logs into Kibana
+![](https://github.com/Anant/cassandra.vision/raw/master/docs/assets/diagrams/cassandra.vision.architecture-offline-log-ingester.png)
+
 After you collect your logs from your Cassandra cluster (either using [offline-log-collector](../offline-log-collector/README.md) or from getting a diagnostic tarball from DSE opscenter), you need to ingest it into your Dashboard. This is what this tool is for. Specifically, we ingest into Elasticsearch and Kibana using Filebeat.
 
 ### Table of Contents:
