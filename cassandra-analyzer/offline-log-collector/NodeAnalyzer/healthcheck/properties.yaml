@@ -1,0 +1,44 @@
+##Common variables
+cassandra_yaml="/etc/dse/cassandra/cassandra.yaml"
+
+##Pending compactions
+pending_compactions_warn="25"
+pending_compactions_error="50"
+
+##Proxyhistograms latency options
+percentile="95%"
+write_latency_warn="3000"
+write_latency_error="5000"
+read_latency_warn="5000"
+read_latency_error="8000"
+
+##cqlsh
+cqlsh_username="cassandra"
+cqlsh_password="cassandra"
+
+##Tablestats
+tombstone_count_error="10"
+tombstone_count_warn="5"
+partition_size_error="1000000"
+partition_size_warn="800000"
+
+##nodetool tpstats
+pending_thread_warn="10"
+pending_thread_error="20"
+blocked_thread_warn="10"
+blocked_thread_error="20"
+
+##Solr properties
+solr_port="8983"
+
+##Data volume disk usgae properties
+data_vol_free_space_error_threshold="75"
+data_vol_free_space_warn_threshold="50"
+
+##Cpu properties in percentage
+cpu_use_error_threshold="80"
+cpu_use_warn_threshold="60"
+
+##Memory properties in KB
+free_memory_error_threshold="4000000"
+free_memory_warn_threshold="5000000"
