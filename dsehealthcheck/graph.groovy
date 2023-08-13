@@ -1,2 +1,1 @@
-system.graph('healthcheck_graph').ifNotExists().create()
-
+system.graph('healthcheck').ifNotExists().create()

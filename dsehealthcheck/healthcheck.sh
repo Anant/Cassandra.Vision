@@ -13,6 +13,7 @@ table_list=tmp/table_list.txt
 table_filter=tmp/table_filter.txt
 
 #Get primary IP of host
+#Requires net-tools for ifconfig
 hostname=`/usr/sbin/ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
 #echo $hostname
 #Get DC Name of node
@@ -87,6 +88,7 @@ pending_tpstats_check()
 }
 
 #Check output of nodetool status
+#Collects count of ips of all nodes listed in nodetool status and compares that count against count of nodes that are in the UN state
 nodetool_status_check()
 {
     ip_count=`nodetool status | grep -E '\s[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\s' | wc -l`
@@ -112,12 +114,13 @@ analytics_master_check()
     fi
 }
 
-#Check for schema mismatch by counting number of rows after schema version
+#Check for schema mismatch by counting number of rows with IPs in them
+#Will generate error if it finds more than 1 row with IPs listed assuming that the additional rows are extra schema versions of servers that are unreachable such that their schema version can not be determined
 schema_mismatch_check()
 {
-    schemacount=`nodetool describecluster | grep -A5 Schema | wc -l`
+    schemacount=`nodetool describecluster | grep -Eo '([0-9]*\.){3}[0-9]*' | wc -l`
     #echo $schemacount
-    if [ $schemacount -ne 3 ]; then
+    if [ $schemacount -ne 1 ]; then
       error_logging "- schema_mismatch - Schema mismatch detected"
     else
       info_logging "- schema_mismatch - Schema is in sync"
@@ -138,6 +141,7 @@ pending_compactions_check()
 }
 
 #Proxyhistograms write latency
+#Checks if the selected percentile (from properties.yaml) latency from nodetool proxyhistograms if crossing the warn or error thresholds
 write_latency_check()
 {
     write_latency=`nodetool proxyhistograms | grep $percentile | awk '{print $3}' | xargs | cut -d. -f1`
@@ -152,6 +156,7 @@ write_latency_check()
 
 
 #Proxyhistograms read latency
+#Checks if the selected percentile (from properties.yaml) latency from nodetool proxyhistograms if crossing the warn or error thresholds
 read_latency_check()
 {
     read_latency=`nodetool proxyhistograms | grep $percentile | awk '{print $2}' | xargs | cut -d. -f1`
@@ -179,7 +184,7 @@ cqlsh_check()
     head -n -2 $table_list | tail -n +5 | awk -F'|' '{gsub(/ /, "", $1); gsub(/ /, "", $2); print $1"."$2}' > $table_filter
 }
 
-#Get table tombstone count from nodetool tablestats
+#Get table tombstone count from nodetool tablestats and verify if they exceed the warn or error thresholds from properties.yaml file
 tombstone_check()
 {
     while IFS= read -r line
@@ -197,7 +202,7 @@ tombstone_check()
     done < "$table_filter"
 }
 
-#Get table partition size from nodetool tablestats
+#Get table partition size from nodetool tablestats and verify if they exceed the warn or error thresholds from properties.yaml file
 partition_size_check()
 {
     while IFS= read -r line
@@ -213,7 +218,7 @@ partition_size_check()
     done < "$table_filter"
 }
 
-#Function that connects to solr http
+#Function that connects to solr http and verifies if the connection is available or not
 solr_check()
 {
     curl -s -o /dev/null http://$hostname:$solr_port/solr/
@@ -268,6 +273,7 @@ free_memory_check()
 }
 
 #spark-sql count check
+#Counts rows (inserted from schema.cql) and verifes if it is working or not
 sparksql_count_check()
 {
     count_raw=tmp/count_raw.txt
@@ -301,13 +307,28 @@ spark_calc_check()
     calc_raw=tmp/calc_raw.txt
     cat spark.scala | dse spark > $calc_raw 2>&1
 
-    count=`cat tmp/calc_raw.txt | grep "approx_count_distinct: 6" | wc -l`
+    count=`cat $calc_raw | grep "approx_count_distinct: 6" | wc -l`
       if [ "$count" == "1" ]; then
         info_logging "- sparkscala - calculation check succeeded"
       else
         error_logging "- sparkscala - calculation check failed"
       fi
 }
+
+#Graph check
+graph_check()
+{
+    graph_raw=tmp/graph_raw.txt
+    cat graph.groovy | dse gremlin-console > $graph_raw 2>&1
+
+    count=`cat $graph_raw | grep "OK" | wc -l`
+      if [ "$count" == "1" ]; then
+        info_logging "- graph - graph check succeeded"
+      else
+        error_logging "- graph - graph check failed"
+      fi
+}
+
 
 
 #Functions to execute
@@ -327,5 +348,6 @@ free_memory_check
 sparksql_count_check
 sparksql_join_check
 spark_calc_check
+graph_check
 tombstone_check
 partition_size_check

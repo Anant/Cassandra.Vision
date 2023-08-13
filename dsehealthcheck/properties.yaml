@@ -1,11 +1,14 @@
 ##Common variables
+#Path to cassandra.yaml file on your node
 cassandra_yaml="/etc/dse/cassandra/cassandra.yaml"
 
 ##Pending compactions
+#Warning and error thresholds for pending compactions on each node
 pending_compactions_warn="25"
 pending_compactions_error="50"
 
 ##Proxyhistograms latency options
+#percentile value which will be checked for latency in the nodetool proxyhistograms command
 percentile="95%"
 write_latency_warn="3000"
 write_latency_error="5000"
@@ -13,16 +16,19 @@ read_latency_warn="5000"
 read_latency_error="8000"
 
 ##cqlsh
+#Credentials for connecting to cqlsh
 cqlsh_username="cassandra"
 cqlsh_password="cassandra"
 
 ##Tablestats
+#Warning and error thresholds for tombstone and partition size on each node
 tombstone_count_error="10"
 tombstone_count_warn="5"
 partition_size_error="1000000"
 partition_size_warn="800000"
 
 ##nodetool tpstats
+#Warning and error thresholds for pending and blocked threads on each node
 pending_thread_warn="10"
 pending_thread_error="20"
 blocked_thread_warn="10"
