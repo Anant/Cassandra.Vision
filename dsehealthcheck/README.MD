@@ -36,6 +36,17 @@
 - Partition size check:
     - Checks if the maximum partition size of each table is within a certain threshold on each node of the cluster.
 
+# Healthcheck LOG functions
+- system.log:
+    - Get count of ERROR and WARN messages.
+    - List top 5 ERROR messages.
+- debug.log:
+    - Get count of ERROR and WARN messages.
+- system.log.zip:
+    - Get count of ERROR and WARN messages.
+- debug.log.zip:
+    - Get count of ERROR and WARN messages.
+
 # How to setup
 - Get code using `git clone https://github.com/Anant/Cassandra.Vision.git`.
 - Ensure that `net-tools` has been installed on the server as that is used for node IP collection. If not installed, you can install it using `sudo yum install net-tools -y`.
