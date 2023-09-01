@@ -52,7 +52,8 @@
 - Ensure that `net-tools` has been installed on the server as that is used for node IP collection. If not installed, you can install it using `sudo yum install net-tools -y`.
 - Edit properties.yaml file and update settings like Cassandra username and password as required.
 - Create schema in DSE by logging into cqlsh and then importing schema using `source 'schema.cql'`.
-- Execute health check from command prompt using the command `./healthcheck.sh`.
+- Execute the regular health check from command prompt using the command `./healthcheck.sh`.
+- Execute the Log related checks from command prompt using the command `./healthcheck_log.sh`.
 
 # Note:
 - This has been tested on DSE 6.8.23 running on a RHEL 9 server.
